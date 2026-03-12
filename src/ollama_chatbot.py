@@ -6,8 +6,8 @@ $ ollama serve
 $ ollama pull qwen2.5:3b
 '''
 
-from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_ollama import ChatOllama
+from langchain_core.messages import SystemMessage, HumanMessage
 
 # Configuration for the Ollama chatbot
 model = 'qwen2.5:3b'
