@@ -121,31 +121,16 @@ Answer: 20 cookies
 
 ## Zero-shot CoT: "Let's think step by step"
 
-Surprisingly, just adding this phrase often triggers step-by-step reasoning:
+Just adding this phrase triggers step-by-step reasoning:
 
-**Before:**
-```
-What is 23 × 17?
-```
-*(May get wrong answer)*
+**Before:** `What is 23 × 17?` *(May get wrong answer)*
 
----
-
-## Zero-shot CoT: "Let's think step by step" (continued)
-
-**After:**
+**After:** `What is 23 × 17? Let's think step by step.`
 ```
-What is 23 × 17? Let's think step by step.
-```
-```
-23 × 17
-= 23 × (10 + 7)
-= (23 × 10) + (23 × 7)
-= 230 + 161
-= 391
+23 × 17 = 23 × (10 + 7) = (23 × 10) + (23 × 7) = 230 + 161 = 391
 ```
 
-**Key finding:** The phrase "Let's think step by step" emerged from research (Kojima et al., 2022) as surprisingly effective
+**Key finding:** The phrase "Let's think step by step" (Kojima et al., 2022) is surprisingly effective
 
 ---
 
@@ -175,31 +160,14 @@ A: [model continues the pattern]
 
 **CoT improves performance on:**
 - Multi-step arithmetic and math
-- Logical reasoning
-- Planning and strategy
+- Logical reasoning and planning
 - Complex question-answering
-
----
-
-## When CoT helps (and when it doesn't) (continued)
 
 **CoT doesn't help (may hurt) on:**
 - Simple factual questions ("What's the capital of France?")
-- Classification tasks
-- Tasks that don't require reasoning steps
+- Classification or tasks without reasoning steps
 
 **Key insight:** CoT adds overhead (more tokens, more cost) - use it when reasoning matters
-
----
-
-## CoT limitations
-
-1. **Still makes mistakes** - following steps doesn't guarantee correctness
-2. **Verbose** - uses more tokens (higher cost, slower)
-3. **Can fabricate reasoning** - steps may sound logical but be wrong
-4. **Model-dependent** - works better on larger models
-
-**Solution:** Combine CoT with other techniques (like self-consistency)
 
 ---
 
@@ -293,13 +261,11 @@ Answer: There are 288 days until Christmas.
 
 **DO:**
 - Provide clear tool descriptions
-- Limit tool count (5-10 tools max)
-- Set iteration limits (prevent infinite loops)
-- Include examples in the prompt
+- Limit tool count (5-10 max)
+- Set iteration limits to prevent infinite loops
 
 **DON'T:**
 - Give tools with overlapping functionality
-- Assume perfect tool selection
 - Skip validation of tool outputs
 
 **Key insight:** ReAct is powerful but requires careful tool design. Modern frameworks (LangChain, LlamaIndex) handle the implementation automatically.
@@ -358,19 +324,6 @@ Single CoT might have gotten this wrong - self-consistency catches it.
 
 ---
 
-## Self-consistency trade-offs
-
-| Aspect | Impact |
-|--------|--------|
-| **Accuracy** | ⬆️ Significant improvement on complex tasks |
-| **Cost** | ⬆️ N× the tokens (e.g., 5× for N=5) |
-| **Latency** | ⬆️ N× slower (unless parallelized) |
-| **Simplicity** | ⬇️ More complex to implement |
-
-**Optimization:** Generate paths in parallel to reduce latency
-
----
-
 # Tree of thoughts
 
 Exploring alternative solution paths
@@ -420,14 +373,12 @@ Evaluate each partial solution and prune poor paths.
 
 **Use ToT when:**
 - Problem requires exploring alternatives
-- Backtracking may be necessary
 - Solution quality matters more than speed
 - Problem has clear evaluation criteria
 
 **Skip ToT when:**
 - Problem is straightforward (use CoT)
 - Real-time response needed
-- Budget is tight (ToT is expensive)
 
 **Key insight:** ToT is powerful but expensive (10-50× more tokens) - reserve for complex planning problems where exploring alternatives is critical
 
@@ -441,35 +392,17 @@ Breaking complex tasks into manageable steps
 
 ## What is prompt chaining?
 
-Break one complex task into multiple simpler prompts, where each output feeds the next:
+Break complex tasks into simpler steps where each output feeds the next:
 
-**Monolithic prompt (hard):**
-```
-Analyze this 50-page document, extract key findings, 
-cross-reference with industry data, generate recommendations, 
-and format as executive summary.
-```
-
-**Prompt chain (easier):**
-1. Extract key findings → output₁
-2. Classify findings by topic → output₂
-3. Research industry data for each topic → output₃
-4. Generate recommendations (given output₂ + output₃) → output₄
-5. Format as executive summary → final output
-
----
-
-## Why prompt chaining works
+**Example:** Document analysis → Extract findings → Classify by topic → Research industry data → Generate recommendations → Format summary
 
 **Advantages:**
-- **Simplicity:** Each step is easier to prompt and test
-- **Debugging:** Identify exactly where things break
-- **Reusability:** Steps can be shared across tasks
-- **Control:** Validate/transform outputs between steps
+- Each step is easier to prompt and test
+- Identify exactly where things break
+- Steps can be reused across tasks
+- Validate outputs between steps
 
-**Trade-offs:**
-- More steps = higher latency (unless parallelized)
-- Needs orchestration (code to manage the chain)
+**Trade-offs:** More steps = higher latency (unless parallelized)
 
 ---
 
@@ -493,21 +426,12 @@ Input → [Step 1a] → result₁
 
 ---
 
-## Error handling in chains
-
-**Problem:** If step 3 fails, the whole chain breaks.
-
-**Solutions:** Validate output quality before each step, retry failed steps, use fallback prompts, and exit early if critical steps fail
-
----
-
 # Best practices
 
 When to use which technique
 
-- Decision framework
+- Choosing the right technique
 - Combining techniques
-- Cost/performance trade-offs
 
 ---
 
@@ -540,48 +464,6 @@ Many real-world applications combine multiple strategies:
 
 ---
 
-## Cost and performance trade-offs
-
-| Technique | Relative cost | Latency | Accuracy gain |
-|-----------|--------------|---------|---------------|
-| Basic prompt | 1× | Low | Baseline |
-| CoT | 2-3× | Low | +10-20% |
-| Few-shot | 1.5-2× | Low | +5-15% |
-| Self-consistency (N=5) | 5× | Med-High | +15-30% |
-| Tree of thoughts | 10-50× | High | +20-40% |
-| ReAct | 2-5× | Medium | Varies |
-
-**Balance:** Task value vs. resource constraints
-
----
-
-## Testing and optimization
-
-**Test thoroughly:**
-- Build test suites with diverse inputs including edge cases
-- Track accuracy, consistency, cost, and latency
-- Compare different approaches on your specific use case
-
-**Optimize strategically:**
-- Cache common prompt components
-- Parallelize independent steps
-- Use basic prompts for common cases, advanced for complex ones
-- Monitor and adjust based on real usage data
-
----
-
-## Common mistakes to avoid
-
-1. **Over-engineering:** Don't use ToT when CoT would work
-2. **Ignoring cost:** Advanced techniques can be 10-50× more expensive
-3. **No fallback:** Always have a simpler backup strategy
-4. **Poor evaluation:** Test thoroughly on diverse inputs
-5. **Template blindness:** Don't cargo-cult techniques - understand when they help
-
-**Remember:** The best technique is the simplest one that works reliably
-
----
-
 # Summary
 
 Key takeaways from today
@@ -590,42 +472,14 @@ Key takeaways from today
 
 ## What we covered
 
-**1. Chain-of-thought**
-- Step-by-step reasoning improves accuracy on complex tasks
-- Zero-shot: "Let's think step by step"
-- Few-shot: Show examples of reasoning
+**Five advanced techniques:**
+1. **Chain-of-thought** - Step-by-step reasoning ("Let's think step by step")
+2. **ReAct** - Thought-Action-Observation loop with tools
+3. **Self-consistency** - Multiple reasoning paths with voting
+4. **Tree of thoughts** - Explore multiple solution branches
+5. **Prompt chaining** - Break tasks into simpler steps
 
-**2. ReAct**
-- Combines reasoning with tool use
-- Thought-Action-Observation loop
-- Enables accurate real-world interactions
-
----
-
-## What we covered (continued)
-
-**3. Self-consistency**
-- Generate multiple reasoning paths, vote on answer
-- Improves reliability at the cost of speed/expense
-
-**4. Tree of thoughts**
-- Explores multiple solution branches
-- Use when backtracking or alternatives matter
-- Expensive but powerful for complex planning
-
----
-
-## What we covered (continued)
-
-**5. Prompt chaining**
-- Break complex tasks into simpler steps
-- Easier to debug and optimize
-- Sequential or parallel execution
-
-**6. When to use what**
-- Start simple, add complexity only when needed
-- Balance cost, speed, and accuracy
-- Test thoroughly
+**Key principle:** Start simple, add complexity only when needed. Balance cost, speed, and accuracy.
 
 ---
 
@@ -643,23 +497,9 @@ Key takeaways from today
 
 ---
 
-## Resources and next steps
+## Resources
 
 **Recommended reading:**
 - [Chain-of-Thought paper](https://arxiv.org/abs/2201.11903) (Wei et al., 2022)
 - [ReAct paper](https://arxiv.org/abs/2210.03629) (Yao et al., 2022)
 - [Tree of Thoughts paper](https://arxiv.org/abs/2305.10601) (Yao et al., 2023)
-
-**Practice:**
-- Implement CoT and ReAct in the demos
-- Build a prompt chain for a multi-step task
-- Compare basic vs. advanced techniques on your use case
-
-**Next:** Applied exercises using these techniques on real problems
-
----
-
-# Questions?
-
-**Office hours:** After class
-**Resources:** Check the course repo for implementation examples

@@ -3,15 +3,25 @@
         "chatbot",
         "chatbots",
         "DGGML",
+        "dmon",
         "dotenv",
+        "dport",
+        "firewalld",
+        "fullchain",
         "ggml",
         "GGUF",
+        "httplib",
+        "journalctl",
         "langchain",
+        "letsencrypt",
         "llamacpp",
         "mmproj",
         "mxfp",
         "noctrex",
         "ollama",
-        "qwen"
+        "pgrep",
+        "privkey",
+        "qwen",
+        "worktree"
     ]
 }

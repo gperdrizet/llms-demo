@@ -1,6 +1,6 @@
 # Demos
 
-This repository includes four chatbot demos that demonstrate different approaches to local LLM inference. Each demo covers specific concepts and tools:
+This repository includes five chatbot demos that demonstrate different approaches to local LLM inference. Each demo covers specific concepts and tools:
 
 ## Demo overview
 
@@ -52,6 +52,19 @@ This repository includes four chatbot demos that demonstrate different approache
 **Tools used:**
 - [HuggingFace Transformers](libraries.md) - Model loading and inference
 - PyTorch - Underlying tensor operations
+
+### 5. ReAct agent chatbot (`src/react_agent_chatbot.py`)
+
+**Concepts covered:**
+- ReAct (Reasoning + Acting) agent pattern
+- Multi-step reasoning with tool use
+- Tool selection and execution
+- Agent iteration loops and error handling
+
+**Tools used:**
+- [LangChain](libraries.md) - Agent framework and tool integration
+- [Ollama](inference_servers.md) or [llama.cpp](inference_servers.md) - Backend LLM
+- [Gradio](libraries.md) - Web interface with reasoning visualization
 
 ---
 
@@ -133,3 +146,32 @@ python src/huggingface_chatbot.py
 # Note: This loads the model directly into memory (no inference server needed).
 # First run will download approximately 6GB of model files to models/hugging_face/
 ```
+
+### ReAct agent chatbot
+
+```bash
+# 1. Start the Ollama server in a terminal
+ollama serve
+
+# 2. Pull a model (in another terminal)
+ollama pull qwen2.5:3b
+
+# 3. Run the ReAct agent chatbot
+python src/react_agent_chatbot.py
+
+# 4. Open the URL shown in the terminal (usually http://127.0.0.1:7860)
+```
+
+**Try these example questions:**
+- "How many days until Christmas from today?"
+- "Calculate 15% tip on a $47.50 bill"
+- "I was born on March 15, 1990. How old am I in days?"
+- "What's 25% of 360, divided by 3?"
+- "How many weeks between today and New Year's Day 2027?"
+
+**What to observe:**
+- Watch the **Reasoning Process** panel (right side) to see how the agent thinks
+- Notice when it decides to use tools vs. when it can answer directly
+- See the Thought → Action → Observation loop in action
+- Try asking multi-step questions that require multiple tool calls
+

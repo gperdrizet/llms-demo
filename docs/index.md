@@ -15,6 +15,7 @@ activities
 inference_servers
 libraries
 models
+systemd-deployment
 ```
 
 ## Overview

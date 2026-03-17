@@ -1,0 +1,104 @@
+# llama.cpp systemd service unit file
+#
+# INSTALLATION INSTRUCTIONS:
+#
+# 1. Build llama.cpp on the host OS:
+#    cd /opt
+#    sudo git clone https://github.com/ggml-org/llama.cpp.git
+#    cd llama.cpp
+#    sudo cmake -B build -DGGML_CUDA=ON
+#    sudo cmake --build build --config Release -j$(nproc)
+#
+# 2. Create directory for models (adjust path as needed):
+#    sudo mkdir -p /opt/models
+#
+# 3. Download your model to /opt/models/ (example):
+#    cd /opt/models
+#    sudo python3 /path/to/llms-demo/utils/download_gpt_oss_20b.py
+#
+# 4. Copy this file to systemd directory:
+#    sudo cp utils/llamacpp.service /etc/systemd/system/
+#
+# 5. Create a dedicated user for the service (recommended):
+#    sudo useradd -r -s /bin/false -d /opt/llama.cpp llama
+#    sudo chown -R llama:llama /opt/llama.cpp
+#    sudo chown -R llama:llama /opt/models
+#
+# 6. Generate a secure API key:
+#    API_KEY=$(openssl rand -base64 32)
+#    echo "Your API key: $API_KEY"
+#    # Save this key securely!
+#
+# 7. Edit the ExecStart line below to include your API key and model path
+#
+# 8. Enable and start the service:
+#    sudo systemctl daemon-reload
+#    sudo systemctl enable llamacpp.service
+#    sudo systemctl start llamacpp.service
+#
+# 9. Check status:
+#    sudo systemctl status llamacpp.service
+#    sudo journalctl -u llamacpp.service -f
+#
+# MONITORING:
+#    To view metrics: curl -H "Authorization: Bearer YOUR_API_KEY" http://localhost:8502/metrics
+#    To view logs: sudo journalctl -u llamacpp.service -f
+
+[Unit]
+Description=llama.cpp inference server
+Documentation=https://github.com/ggml-org/llama.cpp
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=llama
+Group=llama
+WorkingDirectory=/opt/llama.cpp
+
+# IMPORTANT: Edit these lines with your actual values:
+# - Replace YOUR_API_KEY_HERE with a secure random key
+# - Replace HASH in model path with actual snapshot hash:
+#   Find it: ls /opt/models/hub/models--ggml-org--gpt-oss-20b-GGUF/snapshots/
+# - Modify --n-cpu-moe value based on your model (see model docs)
+# - Adjust --n-gpu-layers and other flags as needed
+#
+# NOTE: Systemd doesn't expand wildcards (*) in ExecStart!
+ExecStart=/opt/llama.cpp/build/bin/llama-server \
+    -m PATH_TO_MODEL \
+    --n-gpu-layers 999 \
+    -c 8192 \
+    --flash-attn on \
+    --jinja \
+    --host 0.0.0.0 \
+    --port 8502 \
+    --api-key YOUR_API_KEY_HERE \
+    --metrics \
+    --log-timestamps \
+    --log-prefix
+
+# Restart policy
+Restart=on-failure
+RestartSec=10
+StartLimitInterval=300
+StartLimitBurst=5
+
+# Security hardening (optional but recommended)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/models
+ReadOnlyPaths=/opt/llama.cpp
+
+# Resource limits (adjust based on your hardware)
+# LimitNOFILE=65536
+# MemoryMax=64G
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=llama-server
+
+[Install]
+WantedBy=multi-user.target

@@ -1,6 +1,10 @@
 gradio
 huggingface-hub
+langchain
+langchain-community
+langchain-core
 langchain-ollama
+langchain-openai
 openai
 python-dotenv
 torch

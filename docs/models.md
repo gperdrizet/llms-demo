@@ -82,6 +82,8 @@ llama.cpp/build/bin/llama-server \
     --host 0.0.0.0 --port 8502 --api-key "dummy"
 ```
 
+`-c 8192` sets the context length to 8,192 tokens. Increase this (e.g. `-c 32768`) for longer conversations at the cost of more VRAM. Use `-c 0` to let llama.cpp use the model's full supported context length automatically.
+
 No `--n-cpu-moe` needed - the model fits entirely in GPU memory.
 
 ---

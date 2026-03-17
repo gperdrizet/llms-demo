@@ -42,3 +42,23 @@ Build a practical text summarization script applying various prompting technique
 - Understanding of basic file I/O
 
 **Location:** `activities/activity_2_text_summarization.md`
+
+### Activity 3: Extending the ReAct agent
+
+Enhance the ReAct agent chatbot by adding custom tools and testing multi-step reasoning.
+
+**Duration:** 45-60 minutes
+
+**Skills practiced:**
+- Creating LangChain tools
+- Understanding agent decision-making
+- Debugging tool execution
+- Multi-step problem solving
+
+**Prerequisites:**
+- Completed Activities 1 and 2
+- Python programming experience
+- Understanding of Lesson 47 (Advanced prompting - ReAct)
+
+**Location:** `activities/activity_3_react_agent_tools.md`
+

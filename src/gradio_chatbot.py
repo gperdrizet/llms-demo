@@ -53,6 +53,7 @@ llamacpp_server = os.environ.get('PERDRIZET_URL', 'localhost:8502')
 if llamacpp_server.startswith('localhost') or llamacpp_server.startswith('127.'):
     llamacpp_api_key = os.environ.get('LLAMA_API_KEY', 'dummy')
     llamacpp_base_url = f'http://{llamacpp_server}/v1'
+
 else:
     llamacpp_api_key = os.environ.get('PERDRIZET_API_KEY')
     llamacpp_base_url = f'https://{llamacpp_server}/v1'
@@ -61,14 +62,11 @@ else:
 llamacpp_client = OpenAI(
     base_url=llamacpp_base_url,
     api_key=llamacpp_api_key,
+    timeout=120.0,  # 120 second timeout for inference requests
 )
 
-# Try to get the model name from the server (gracefully fail if unavailable)
-try:
-    models = llamacpp_client.models.list()
-    llamacpp_model = models.data[0].id
-except:
-    llamacpp_model = 'llama.cpp (server not available)'
+# Use a default model name (actual model is determined by server configuration)
+llamacpp_model = 'gpt-oss-20b'
 
 
 def respond(message, history, backend, system_prompt):
@@ -144,6 +142,7 @@ def respond(message, history, backend, system_prompt):
             return response.choices[0].message.content
         
         except Exception as e:
+
             # Return helpful error message if llama.cpp server is unreachable
             error_msg = (
                 f'**llama.cpp backend is unavailable**\n\n'
@@ -162,18 +161,18 @@ def respond(message, history, backend, system_prompt):
 # --- Build Gradio UI ---
 
 # Use Gradio Blocks for custom layout with multiple input controls
-with gr.Blocks(title='Multi-backend chatbot') as demo:
+with gr.Blocks(title='LLM chatbot demo') as demo:
     
     # Page title and description
-    gr.Markdown('# Multi-backend chatbot')
+    gr.Markdown('# LLM chatbot demo')
     
     # Backend selector - radio buttons for Ollama vs llama.cpp
     with gr.Row():
         backend_selector = gr.Radio(
             choices=['Ollama', 'llama.cpp'],
-            value='Ollama',
+            value='llama.cpp',
             label='Model Backend',
-            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model}'
+            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_base_url}'
         )
     
     # System prompt input - allows customizing model behavior
@@ -188,6 +187,7 @@ with gr.Blocks(title='Multi-backend chatbot') as demo:
     chatbot = gr.ChatInterface(
         fn=respond,
         additional_inputs=[backend_selector, system_prompt_input],
+
     )
 
 

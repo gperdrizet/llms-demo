@@ -61,6 +61,7 @@ The documentation covers:
 - Inference server configuration
 - Library reference with code examples
 - Model specifications and serving commands
+- Systemd deployment for production use
 - Slide and activity guides
 
 ---
