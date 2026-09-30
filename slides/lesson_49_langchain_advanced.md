@@ -64,6 +64,18 @@ After the slides: **Demo 6** (ReAct agent) and **Demo 7** (RAG system) bring all
 
 ---
 
+## Context: where LangChain has been
+
+| Era | What it was | Why it changed |
+|-----|------------|----------------|
+| **2022-2023** | "Glue" library — standardized prompts, chains, and tool abstractions on top of raw OpenAI API calls | Ecosystem was fragmented; a common interface had value |
+| **2023-2024** | Opinionated framework — LCEL pipes, `AgentExecutor`, `initialize_agent` | Abstractions grew faster than the underlying APIs evolved |
+| **1.0 (2025)** | Minimal harness — `create_agent` + middleware; LangGraph for complex graphs | Provider APIs matured (native tool calling, structured output); thin wrappers became sufficient |
+
+**Practical note:** most YouTube tutorials and older blog posts show the 2023-2024 API. If a snippet uses `AgentExecutor` or `initialize_agent`, it won't work against current LangChain. Current docs: [docs.langchain.com](https://docs.langchain.com)
+
+---
+
 # Memory
 
 Giving LLMs conversation history
