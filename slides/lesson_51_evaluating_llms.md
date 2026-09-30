@@ -549,7 +549,7 @@ The frontier is shifting from **static multiple-choice** to **long-horizon, agen
 | **Contamination resistance** | Benchmarks that refresh continuously so models can't memorize answers | LiveBench |
 | **Real-world SWE** | Actual GitHub issues and repos, not synthetic problems | FrontierCode |
 
-**Takeaway:** the "one leaderboard score" era is over. Evaluation is becoming **per-task, per-occupation, at a cost** — the same framing as model pricing.
+**Takeaway:** the "one leaderboard score" era is over. Evaluation is becoming **per-task, per-occupation, at a cost**: the same framing as model pricing.
 
 ---
 
