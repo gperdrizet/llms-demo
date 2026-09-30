@@ -322,15 +322,28 @@ This structure keeps the LLM grounded - it must justify each action with explici
 
 ## Agent components in LangChain
 
+LangChain 1.0+ provides **`create_agent`** as the primary entry point:
+
+```python
+from langchain.agents import create_agent
+
+agent = create_agent(
+    model="openai:gpt-4o",          # any LangChain chat model
+    tools=[get_weather, search_web], # @tool-decorated functions
+    system_prompt="You are a helpful assistant",
+)
+result = agent.invoke(
+    {"messages": [{"role": "user", "content": "What's the weather in SF?"}]}
+)
+```
+
 | Component | Role |
 |-----------|------|
+| `create_agent` | Builds and runs the agent; encapsulates the ReAct loop internally |
 | `Tool` / `@tool` | A callable function the agent can invoke |
-| `create_react_agent` | Builds a ReAct agent from a prompt, LLM, and tool list |
-| `AgentExecutor` | Runs loop - calls LLM, executes tools, collects observations |
-| `AgentFinish` | Signals the agent has produced a final answer |
-| `AgentAction` | Represents a single tool call decision |
+| `model` | Any LangChain chat model (OpenAI, Ollama, Anthropic, etc.) |
 
-**`AgentExecutor`** handles the observation loop so you don't have to write it manually. It also enforces a `max_iterations` limit to prevent infinite loops.
+**`create_agent`** handles the Thought → Action → Observation loop for you, with a built-in `max_iterations` limit to prevent infinite loops.
 
 ---
 
@@ -361,11 +374,11 @@ This structure keeps the LLM grounded - it must justify each action with explici
 ## Additional resources
 
 **LangChain documentation:**
-- [Memory](https://python.langchain.com/docs/modules/memory/)
-- [Document loaders](https://python.langchain.com/docs/modules/data_connection/document_loaders/)
-- [Text splitters](https://python.langchain.com/docs/modules/data_connection/document_transformers/)
-- [Vector stores](https://python.langchain.com/docs/modules/data_connection/vectorstores/)
-- [Agents](https://python.langchain.com/docs/modules/agents/)
+- [Short-term memory](https://docs.langchain.com/oss/python/langchain/short-term-memory.md)
+- [Agents](https://docs.langchain.com/oss/python/langchain/agents.md)
+- [Tools](https://docs.langchain.com/oss/python/langchain/tools.md)
+- [Structured output](https://docs.langchain.com/oss/python/langchain/structured-output.md)
+- [LangChain overview](https://docs.langchain.com/oss/python/langchain/overview.md)
 
 **Papers:**
 - [ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al., 2022)](https://arxiv.org/abs/2210.03629)

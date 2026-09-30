@@ -38,7 +38,7 @@ style: |
 
 # Lesson 47: Advanced prompting strategies
 
-**Unlocking complex reasoning improving reliability**
+**Unlocking complex reasoning and improving reliability**
 
 ---
 

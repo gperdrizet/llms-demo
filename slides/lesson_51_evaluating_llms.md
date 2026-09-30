@@ -538,6 +538,21 @@ Automated metrics work best when a **reference answer exists**. For open-ended g
 
 ---
 
+## Where evaluation is heading
+
+The frontier is shifting from **static multiple-choice** to **long-horizon, agentic, real-environment** tasks:
+
+| Direction | What it means | Example |
+|-----------|--------------|----------|
+| **Professional work** | Tasks drawn from real jobs (accounting, legal, healthcare) | GDPval (OpenAI) |
+| **Long-horizon agency** | Multi-step, multi-tool workflows that run for hours or days | Vending-Bench 2, τ²-bench |
+| **Contamination resistance** | Benchmarks that refresh continuously so models can't memorize answers | LiveBench |
+| **Real-world SWE** | Actual GitHub issues and repos, not synthetic problems | FrontierCode |
+
+**Takeaway:** the "one leaderboard score" era is over. Evaluation is becoming **per-task, per-occupation, at a cost** — the same framing as model pricing.
+
+---
+
 # Summary
 
 ---
@@ -570,7 +585,7 @@ Automated metrics work best when a **reference answer exists**. For open-ended g
 - [Open LLM Leaderboard](https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard) - Open leaderboard running a wide set of benchmarks on user submitted models (archived)
 - [MMLU-Pro Leaderboard](https://huggingface.co/spaces/TIGER-Lab/MMLU-Pro) - TIGER Lab, updated MMLU benchmark leaderboard on Hugging Face
 - [LMSYS Chatbot Arena](https://chat.lmsys.org/) - Head to head evaluation of model outputs by humans
-- [Vending Machine Bench](https://andonlabs.com/evals/vending-bench-2) - Started as maybe a meme, but has become more that that!
+- [Vending Machine Bench](https://andonlabs.com/evals/vending-bench-2) - Started as maybe a meme, but has become more than that!
 - [2026 ARC Prize competition](https://arcprize.org/competitions/2026) - frontier agent evaluation competition (on Kaggle)
 - [RAGAS](https://docs.ragas.io/) - RAG-specific evaluation
 
