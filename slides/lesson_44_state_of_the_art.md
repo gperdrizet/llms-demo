@@ -38,214 +38,279 @@ style: |
 
 # Lesson 44: State of the art in generative AI
 
-**LLM landscape and foundations**
+**The landscape beyond text — and the LLM state of the art**
 
 ---
 
 ## Recap: how LLMs work
 
-- **Decoder-only transformers**: Self-attention and feed forward layers
-- **Tokenization:** Text is split into tokens (subwords), not characters or words
+- **Decoder-only transformers**: self-attention and feed-forward layers
+- **Tokenization:** text is split into tokens (subwords), not characters or words
 - **Autoregressive generation:** LLMs predict the next token given all previous tokens
-- **Training:** Learned from massive text corpora via self-supervised learning
-- **Scale:** Billions of parameters encode language patterns and knowledge
+- **Training:** learned from massive corpora via self-supervised learning
+- **Scale:** billions of parameters encode language patterns and knowledge
 
-We covered transformers in depth earlier - here we focus on the **landscape** of available models
+We covered transformers in depth earlier — today we focus on the **landscape** of what's available and where the field is heading.
 
 ---
 
 ## Today's outline
 
-**1. The landscape** - what's available
-- Open vs closed weights, licensing
-- Text and code generation models
+**Part 1 · The landscape beyond text**
+- Modalities and the architectures behind them
+- One dated snapshot of the landscape (the "what's real today" table)
+- Per-modality highlights: image, video, audio
+- What changed in 2026
 
-**2. Evaluating models** - how to compare and choose
-- Model sizes and parameters
-- Context length
-- Benchmarks
+**Part 2 · The LLM state of the art**
+- Frontier + open-weight models
+- Architecture themes and economics
+- The benchmark shift: how we measure capability now
 
-**3. Looking ahead** - where this is going
-- Key trends
-- Limitations
-
----
-
-# The landscape
-
-What models are available and who makes them
-
-- Open vs closed weights
-- Licensing considerations
-- Text and code generation models
+> Conventions: concepts stay evergreen and are **not** dated. All dated facts (model names, prices, benchmark scores, dates) live in the single dated landscape table, footnoted for re-verification.
 
 ---
 
-## Open vs closed weights
+# Part 1 · The landscape beyond text
 
-**Closed weights (API only):**
-- Sources: OpenAI, Anthropic, Google, Moonshot AI
-- Best performance, easy to use
-- Can't self-host, can't fine-tune (some exceptions), ongoing costs
-
-**Open weights (self-hostable):**
-- Sources: Meta, Mistral AI, Alibaba, Zhipu AI, Hugging Face
-- Full control, fine-tunable, privacy-friendly, free to use
-- Require infrastructure, generally less capable
+Generative AI is no longer just text-in, text-out
 
 ---
 
-## Licensing considerations
+## Beyond LLMs: the modality picture
 
-- **Closed weights**: governed by Terms of Service, pay per token, check data policies
-- **Open weights**: "open" does not always mean "open source" - always check the license
-  - **Permissive** (Apache 2.0, MIT): Mistral, Falcon, DeepSeek, Phi
-  - **Restricted**: Llama (free, but limited above 700M monthly active users)
+A large language model is only one point in a broader landscape. Frontier systems now **emit and consume** a range of modalities:
 
-**Key takeaway:** Always check the license before using a model commercially
+- **Text** — the LLM core (reasoning, code, agents)
+- **Image** — create and edit photorealistic images
+- **Video** — cinematic clips, increasingly *with audio*; interactive 3D worlds
+- **Audio** — music and speech, increasingly natural and real-time
+- **Worlds / 3D** — explorable, interactive environments ("world models")
 
----
-
-## Text generation models: closed weights
-
-| Model | Company | Strengths |
-|-------|---------|-----------|
-| [GPT](https://openai.com) | OpenAI | Strong reasoning |
-| [Claude](https://anthropic.com) | Anthropic | Strong analysis |
-| [Gemini](https://gemini.google.com) | Google | Search integration |
-| [Kimi](https://kimi.moonshot.cn) | Moonshot AI | Long context, strong multilingual |
-| [Grok](https://x.ai) | xAI | Strong reasoning, real-time knowledge |
-| [Command](https://cohere.com) | Cohere | Enterprise search and RAG |
+The durable skill is to map a task to the **right modality + architecture**, not to memorize a model name that will be stale next quarter.
 
 ---
 
-## Text generation models: open weights
+## The modality map
 
-| Model | Company | Strengths |
-|-------|---------|-----------|
-| [Llama](https://huggingface.co/meta-llama) | Meta | 8B to 70B parameters, strong open option |
-| [Mistral](https://huggingface.co/mistralai) | Mistral AI | Efficient 7B model, good quality |
-| [DeepSeek](https://huggingface.co/deepseek-ai) | DeepSeek | Strong reasoning, competitive with closed models |
-| [Qwen](https://huggingface.co/Qwen) | Alibaba | Competitive multilingual models |
-| [GLM](https://huggingface.co/THUDM) | Zhipu AI | Strong bilingual (English/Chinese) |
-| [Trinity](https://huggingface.co/arcee-ai) | Arcee AI | Broad task coverage |
-| [Phi](https://huggingface.co/microsoft) | Microsoft | Small, efficient, strong for size |
-| [Falcon](https://huggingface.co/tiiuae) | TII (Abu Dhabi) | Permissive license, multilingual |
+| Modality | What it does | Representative direction |
+|----------|--------------|--------------------------|
+| **Text / LLM** | Reason, code, use tools, drive agents | Agentic, long-horizon tasks |
+| **Image** | Generate and *edit* detailed images | Diffusion + fine-tunable models |
+| **Video** | Cinematic clips **with audio**; interactive worlds | Video+audio generation; explorable 3D worlds |
+| **Audio** | Music and speech, real-time voice | Emotive TTS; real-time conversational voice |
+| **Worlds / 3D** | Interactive, explorable environments | "World models" you can step into |
 
----
-
-## Code generation models
-
-Most general-purpose LLMs can generate code, but some companies offer code-specialized variants fine-tuned for programming tasks.
-
-| Model | Company | Access | Strengths |
-|-------|---------|--------|-----------|
-| [Codex](https://openai.com) | OpenAI | Closed | Code-specialized, powers Copilot |
-| [CodeLlama](https://huggingface.co/codellama) | Meta | Open | 7B-34B, code-specialized |
-| [StarCoder](https://huggingface.co/bigcode) | Hugging Face | Open | 15B, permissive training data |
-| [DeepSeek Coder](https://huggingface.co/deepseek-ai) | DeepSeek | Open | Strong open alternative |
-| [Qwen Coder](https://huggingface.co/Qwen) | Alibaba | Open | Competitive code generation |
+Each modality is a **separate product line** with its own vendors, architectures, and economics.
 
 ---
 
-# Evaluating models
+## Architectures (the evergreen menu)
 
-How to compare and choose models
+Underneath the modality names, a few architecture families recur:
 
-- Model sizes and parameters
-- Context length
-- Benchmarks
+- **Autoregressive** — predict the next token/unit; the LLM workhorse. Scales to very long contexts; now extended to image and video *tokens*.
+- **Diffusion** — iteratively denoise to generate; the dominant engine for image (and increasingly video and audio).
+- **Mixture of Experts (MoE)** — many total parameters, but only a subset is active per token → large capacity at lower per-token compute.
+- **World models** — models of environments you can *interact with* (interactive 3D, steerable "world action" models).
 
----
-
-## Model sizes and parameters
-
-- **Parameters**: the learned weights that define the model's behavior
-- More parameters -> more capable, but also more expensive to run
-
-| Size class | Examples | Hardware |
-|------------|----------|-----------------|
-| Small (1-3B) | Phi-2, TinyLlama | CPU, laptop |
-| Medium (7-13B) | Mistral 7B, Llama 8B | Single consumer GPU |
-| Large (30-70B) | Llama 70B, CodeLlama 34B | Multiple GPUs / cloud |
-| Frontier (100B+) | GPT, Claude | API only |
-
-**Mixture of Experts (MoE):** some models (Mixtral, DeepSeek) have many total parameters but only activate a subset per token - large capacity, lower compute cost.
-
-**Key takeaway:** Bigger is not always better - match model to task
+**Takeaway:** the same four ideas — autoregressive, diffusion, MoE, world models — get recombined across every modality.
 
 ---
 
-## Context and context length
+## The dated landscape — LLM frontier (1 of 3)
 
-- **Context window**: number of tokens a model can process (input + output)
+| Model (vendor) | Tier | Key facts |
+|----------------|------|-----------|
+| **GPT-6 Astra** (OpenAI) | Flagship | $10/$50 per MTok (in/out) · 1.05M context, 128K max output · knowledge cutoff Apr 30 2026 · reasoning effort low→max · tools: functions, web/file search, computer use |
+| **GPT-6.1 Sol** (OpenAI) | Near-flagship | $2/$10 per MTok · cached input $0.10/MTok · released Sep 29 2026 · "≈Astra intelligence at ~1/5 the price" · ≈matches Astra on DeepSWE v1.1 |
+| **GPT-6 Luna** (OpenAI) | Cost / high-volume | $0.10/$0.50 per MTok · knowledge cutoff May 18 2026 |
+| **GPT-5.6 Cyber / GPT-Rosalind** (OpenAI) | Specialized | Cybersecurity (Cyber + Daybreak Red/Blue) and life-sciences (Rosalind) lines — a "specialized category" product pattern |
+| **Claude Opus 5.5** (Anthropic) | Flagship | Released Sep 22 2026 · complex open-ended work · ≈66.4% Terminal-Bench 4.0 |
+| **Claude Sonnet 5.5** (Anthropic) | Mid | $2/$10 per MTok · cache reads $0.20/MTok · released Sep 28 2026 · 30%+ faster, up to 30% cheaper per task vs Sonnet 5 · ≈70.6% vs ≈10.3% (Sonnet 5) on Terminal-Bench 4.0 · first Sonnet with cyber safeguards + fallbacks |
+| **Claude Haiku 5.5** (Anthropic) | Cost / high-volume | Announced "coming within weeks" |
+| **Gemini 3.7 Flash / 3.8 Live** (Google) | Fast / real-time | Flash = fast tier (drives Antigravity agentic coding); 3.8 Live = real-time voice; **Gemini Omni** = stated omni-modal direction |
+| **Grok 4.7** (xAI) | Flagship | 500K context · $2/$6 per MTok · long-context tier (≥200K) billed $4/$12 |
 
-| Model | Context length |
-|-------|---------------|
-| GPT (2020) | 4K tokens |
-| GPT (2023) | 128K tokens |
-| Claude (2024) | 200K tokens |
-| Gemini (2024) | 1M tokens |
-
-- Longer context = larger documents, longer conversations
-- Cost scales with context length (more tokens = more compute = more $$$)
-
----
-
-## Benchmarks and evaluation
-
-- Benchmarks provide a **standardized way to compare** models
-
-| Benchmark | What it measures |
-|-----------|-----------------|
-| [MMLU](https://huggingface.co/datasets/cais/mmlu) | General knowledge across 57 subjects |
-| [HumanEval](https://github.com/openai/human-eval) | Code generation (Python) |
-| [GSM8K](https://huggingface.co/datasets/openai/gsm8k) | Math reasoning |
-| [MT-Bench](https://huggingface.co/spaces/lmsys/mt-bench) | Multi-turn conversation quality |
-| [HellaSwag](https://huggingface.co/datasets/Rowan/hellaswag) | Common sense reasoning |
-| [Chatbot Arena](https://lmarena.ai) | Human preference rankings (head-to-head) |
-
-- Scores don't always reflect real-world performance - test on your own tasks
+> *Verified 2026-09-30 — re-verify before reusing. Benchmark scores are vendor-reported (≈) and drift week to week.*
 
 ---
 
-# Looking ahead
+## The dated landscape — open weights (2 of 3)
 
-Where the field is going
+| Org (current line) | Key facts |
+|--------------------|-----------|
+| **Meta — Llama 4** | Natively multimodal (text+image), mixture-of-experts; Llama Guard / Prompt Guard safety families alongside |
+| **DeepSeek — DeepSeek-V4 / V4.1-Flash** | V4-Flash-Base 292B (Apr 27); V4.1-Flash focuses on KV-cache compression |
+| **Moonshot — Kimi K3** | Image-text-to-text; "Open Frontier Intelligence" paper (Jul 27); ≈2.8T total MoE params (approx — confirm framing) |
+| **Alibaba — Qwen3 family** | Qwen3Guard (safety); Qwen-Image (20B) + Qwen-Image-Edit; docs at qwen.ai |
+| **Google — Gemma** | Open-model line from DeepMind |
+| **Mistral — Medium 3.5 / Small 4 / OCR 4 / Voxtral TTS** | €3B Series D at >€21B valuation (Sep 8 2026); explicit "sovereign, open-weight AI" strategy; Mozilla partnership → open multilingual AI in Firefox (Sep 16); products: Studio, Forge, Vibe, Vibe for code, AI Cloud |
 
-- Key trends
-- Limitations
+> *Verified 2026-09-30 — re-verify before reusing.*
 
 ---
 
-## Key trends
+## The dated landscape — image, video, audio (3 of 3)
 
-1. **Longer context** - From 4K to 1M+ tokens
-2. **Smaller, more efficient** - Better performance at smaller sizes
-3. **Open alternatives improving** - Closing the gap with closed models
-4. **Specialization** - Domain-specific fine-tuned variants
-5. **Autonomous agents** - Models that can use tools and take actions
-6. **Reasoning models** - Dedicated chain-of-thought architectures (o1, DeepSeek-R1)
+| Modality | Model (vendor) | Key facts |
+|----------|----------------|-----------|
+| **Image** | **Nano Banana / Gemini Image** (Google) | "Create and edit detailed images" |
+| **Image** | **FLUX 3 / flux-3-action** (Black Forest Labs) | Fine-tunable *world-action* model (~Sep 23 2026); FLUX.2 [klein] LoRA fine-tune in <60 min |
+| **Image** | **GPT-Image-2.5** (OpenAI) | Sunburst (most capable) / Flare (fast, everyday) |
+| **Image** | **Qwen-Image / Qwen-Image-Edit** (Alibaba) | 20B |
+| **Image** | **grok-imagine** (xAI) | xAI image line |
+| **Video** | **Veo** (Google) | "Generate cinematic video **with audio**" |
+| **Video** | **Genie 3** (Google) | Interactive 3D world generation / exploration (world-model direction) |
+| **Video** | **Sora** (OpenAI) | **DISCONTINUED** — web/app Apr 26 2026, API Sep 24 2026 (cautionary example only) |
+| **Audio** | **Lyria** (Google) | Music generation |
+| **Audio** | **Gemini Audio / 3.8 Live / 3.5 Transcribe** (Google) | "Talk, create, control audio"; real-time voice; STT |
+| **Audio** | **Voxtral TTS** (Mistral) | Speech synthesis |
+| **Audio** | **Eleven v4** (ElevenLabs) | "Most emotive model yet" (recent release) |
+| **Audio** | **GPT-Live 1 / GPT-Realtime-2.1 / GPT-Transcribe** (OpenAI) | Voice, real-time, STT |
+
+> *Verified 2026-09-30 — re-verify before reusing. Several third-party video/music lines were not re-verified this pass and are intentionally omitted.*
+
+---
+
+## Image: mature, competitive, and editable
+
+The image field has moved from "generate a picture" to **create *and* edit**, with real fine-tuning workflows:
+
+- **Creation + editing** are now first-class, not one-shot generation.
+- **Fine-tuning is a real workflow** — e.g., LoRA fine-tunes completing in well under an hour on some lines.
+- **"World action" models** — fine-tunable, steerable image models — are an emerging direction.
+
+Exemplars: Google **Nano Banana**, Black Forest Labs **FLUX 3**, OpenAI **GPT-Image-2.5**, Alibaba **Qwen-Image**. *(Specs in the dated landscape table.)*
+
+---
+
+## Video: audio is in, worlds are the frontier
+
+Two shifts define video generation:
+
+- **Video comes with audio** — "cinematic video with audio" is the bar (e.g., Google **Veo**).
+- **Interactive worlds** — explorable, 3D, world-model direction (e.g., Google **Genie 3**), not just passive clips.
+
+**Cautionary example:** **Sora** (OpenAI) was **discontinued** — a reminder of how fast this space turns. Don't build a thesis on a single model name. *(Dates in the dated landscape table.)*
+
+---
+
+## Audio: speech is converging with the LLM
+
+Audio splits into **music** and **speech**, with speech increasingly a first-class LLM interface:
+
+- **Music** generation (e.g., Google **Lyria**).
+- **Speech / TTS** getting more natural and emotive (e.g., **Eleven v4**, Mistral **Voxtral TTS**).
+- **Real-time voice** — low-latency conversational voice is now a product line of its own (e.g., Google **Gemini 3.8 Live**, OpenAI **GPT-Live**).
+
+**Takeaway:** voice is becoming a primary *interface*, not a bolt-on.
+
+---
+
+## What changed in 2026 (the durable themes)
+
+- **Agentic is the frontier** — coding, computer use, and multi-step business workflows replace Q&A as the benchmark currency.
+- **Cost stratification** — near-flagship performance at 1/3–1/5 the price is the norm; cached-input pricing is a headline feature.
+- **Reasoning-effort tiers** — same model, different capability/cost dials (low→max) as a product dimension.
+- **Native multimodality** — text+image input is table stakes; omni-modal is the stated direction.
+- **Video shake-up** — Sora exit; Veo (video+audio) and Genie 3 (interactive worlds) define the push.
+- **Specialized categories + safety as features** — cyber, life sciences, OCR, TTS as distinct lines; safeguards and fallback behaviors ship as product features.
+- **Open-weight frontier + "sovereign AI"** — large open models rival closed ones; sovereignty is an explicit commercial strategy.
+
+---
+
+# Part 2 · The LLM state of the art
+
+How to think about the text frontier (concepts) — exact figures in the dated table
+
+---
+
+## Frontier closed models: a product family, not a single model
+
+The "frontier" is now a **tiered family** per vendor, plus specialized lines:
+
+| Tier | Role | Exemplars |
+|------|------|-----------|
+| **Flagship** | Maximum capability, highest cost | GPT-6 Astra, Claude Opus 5.5, Grok 4.7, Gemini 3.x |
+| **Near-flagship** | ≈flagship at a fraction of the price | GPT-6.1 Sol, Claude Sonnet 5.5, Gemini Flash |
+| **Cost / high-volume** | Cheap, fast, high throughput | GPT-6 Luna, Claude Haiku 5.5 |
+| **Specialized** | Domain-specific product lines | Cyber (GPT-5.6 Cyber, Daybreak), life sciences (GPT-Rosalind), OCR, TTS |
+
+**Plus:** **reasoning-effort tiers** (low→max) — the *same* model at different capability/cost settings. *(Prices and scores: see the dated landscape table.)*
+
+---
+
+## Open weights: the frontier is open too
+
+Large open-weight models now rival closed models on many tasks:
+
+- **Llama 4, DeepSeek V4, Kimi K3, Qwen3, Gemma, Mistral** (Medium 3.5 / Small 4) form the current open frontier.
+- **MoE** is common — big total capacity, lower active compute per token.
+- **Native multimodality** in open models too (e.g., Llama 4, Kimi K3: text+image input).
+- **"Sovereign AI"** is an explicit commercial strategy (notably Mistral: open-weight + regional deployment).
+
+**Trade-off:** open weights = control, privacy, fine-tuning, self-hosting — at the cost of your own infrastructure and ops. *(Param counts and specs: see the dated landscape table.)*
+
+---
+
+## Architecture themes (evergreen)
+
+Four themes define the current LLM frontier:
+
+- **Mixture of Experts (MoE)** — many parameters, sparse activation → capacity without proportional per-token cost.
+- **Reasoning-effort tiers** — a *product* dimension (low→max) more than a distinct architecture: one model, multiple cost/capability settings.
+- **~1M-token context windows** — now common at the frontier; long-context tiers are often priced separately.
+- **Native multimodality** — text+image input is table stakes; omni-modal (any-in → any-out) is the stated direction.
+
+**Takeaway:** capability is increasingly a *configuration* (model × effort × context), not a fixed point.
+
+---
+
+## Economics: capability is priced per task
+
+- **Per-token pricing** (input vs output) is the unit; capability is now measured **at a cost**.
+- **Near-flagship at 1/3–1/5 price** is the norm — choose the tier that clears your bar, not the most expensive one.
+- **Cached-input pricing** is a headline feature — repeated/shared context can be dramatically cheaper than standard input.
+- **Match the dial:** model tier × reasoning effort × context length, against your task's budget.
+
+**Takeaway:** optimize for *cost-per-acceptable-task*, not raw benchmark rank.
+
+---
+
+## The benchmark shift: how we measure capability now
+
+Static multiple-choice benchmarks (MMLU and friends) are **saturated** — no longer *the* story. Frontier evaluation is now **long-horizon, agentic, real-environment**:
+
+| Area | Representative evals |
+|------|----------------------|
+| Agentic coding | Terminal-Bench 4, DeepSWE, FrontierCode, CursorBench |
+| Professional / knowledge work | GDPval, AutomationBench, GDP.pdf |
+| Reasoning | Humanity's Last Exam |
+| Computer use | OSWorld 2 |
+| Tool use / preference | Toolathlon, LMArena |
+
+**Teaching takeaway:** capability is measured **per-task, per-effort-level, at a cost** — not as a single score. The old MMLU-style "one number to rule them all" is gone.
 
 ---
 
 ## Limitations and considerations
 
-- **Hallucinations**: LLMs are probabilistic text generators, not databases of facts
-- **Reasoning gaps**: struggle with multi-step logic, math, and planning
-- **Cost**: API usage is metered; scales with tokens and context length
-- **Privacy**: closed models send data to third-party servers
-- **Ethics**: training data bias, copyright, and environmental impact
+- **Hallucinations:** LLMs are probabilistic generators, not databases of facts.
+- **Reasoning gaps:** still struggle with some multi-step logic, math, and planning.
+- **Cost:** API usage is metered and scales with tokens, context, and reasoning effort.
+- **Privacy:** closed models send data to third-party servers; open weights don't (but cost you ops).
+- **Staleness:** model names and scores go stale fast — re-verify the dated table before relying on it.
+- **Ethics:** training-data bias, copyright, and environmental impact remain live concerns.
 
 ---
 
 ## Summary
 
-- **The landscape**: closed weights for performance, open weights for control
-- **Model catalog**: major text and code generation models from many providers
-- **Evaluating models**: size, context length, and benchmarks help compare options
-- **Looking ahead**: longer context, smaller models, reasoning, and agents
-- Always test on your own tasks - benchmarks and hype don't tell the full story
+- **Part 1 — the landscape beyond text:** modality map, evergreen architectures (autoregressive, diffusion, MoE, world models), one dated landscape table, and per-modality highlights (image, video, audio).
+- **Part 2 — the LLM state of the art:** frontier and open-weight models, architecture themes (MoE, reasoning-effort tiers, ~1M context, native multimodality), per-task economics with cached input, and the shift to agentic, long-horizon benchmarks.
+- **Sora is discontinued** — a cautionary example of how fast the landscape turns; never present it as a current offering.
+- Always test on your own tasks — benchmarks and hype don't tell the full story.
 
 ---
 
