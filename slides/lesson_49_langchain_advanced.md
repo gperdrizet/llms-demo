@@ -223,7 +223,7 @@ Similar meaning → similar vectors → close together in vector space.
 |-------|-------|-------|
 | `HuggingFaceEmbeddings` | Sentence-transformers model | Local direct load |
 | `OllamaEmbeddings` | Ollama model | Local server |
-| `OpenAIEmbeddings` | text-embedding-ada-002 | API call, high quality |
+| `OpenAIEmbeddings` | text-embedding-3-small | API call, high quality |
 
 `all-MiniLM-L6-v2` 384d sentence transformers model, good starting point for general-purpose RAG.
 
