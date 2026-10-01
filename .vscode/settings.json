@@ -39,6 +39,7 @@
         "mydb",
         "noctrex",
         "ollama",
+        "pciutils",
         "pgrep",
         "pgvector",
         "privkey",
