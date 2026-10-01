@@ -44,13 +44,13 @@ style: |
 
 ## Recap: what we learned
 
-Last lesson we explored:
-- The LLM landscape: open vs closed weights
-- Model sizes, context length, quantization
-- Text and code generation models
-- Benchmarks for comparing models
+Last lesson covered the 2026 state of the art:
+- The generative-AI landscape: image, video, audio, and LLMs
+- Frontier models as tiered product families (flagship / near-flagship / cost-and-volume)
+- Open-weight frontier and architecture themes (MoE, reasoning tiers, ~1M context)
+- Per-task economics and the shift to long-horizon agentic benchmarks
 
-**Today:** How do we actually **configure and use** these models?
+**Today:** How do we actually **deploy and use** these models in practice?
 
 ---
 
@@ -208,7 +208,7 @@ Run a separate service that hosts the model:
 | Server | Strengths |
 |--------|-----------|
 | [Ollama](https://ollama.com) | Easy setup, model management, REST API |
-| [llama.cpp](https://github.com/ggerganov/llama.cpp) | Fast, efficient, CPU-friendly |
+| [llama.cpp](https://github.com/ggml-org/llama.cpp) | Fast, efficient, CPU-friendly |
 | [vLLM](https://github.com/vllm-project/vllm) | High-performance, batching (also works as library) |
 | GPT4All, LM Studio | User-friendly desktop apps |
 
@@ -437,6 +437,6 @@ We've covered the full stack!
 
 **Resources:**
 - [Ollama](https://ollama.com)
-- [llama.cpp](https://github.com/ggerganov/llama.cpp)
+- [llama.cpp](https://github.com/ggml-org/llama.cpp)
 - [LangChain](https://python.langchain.com)
 - [Hugging Face](https://huggingface.co)
