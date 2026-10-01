@@ -7,7 +7,6 @@
 
    OPENAI_API_URL=<server-address>
    OPENAI_API_KEY=<api-key>
-   OPENAI_API_MODEL=<model-name>
 
 2. Run the chatbot - it will automatically connect to the remote server:
 
@@ -16,7 +15,7 @@
 
 --- Option 2: Build and run the server locally ---
 
-1. See README.md for instructions on how to build llama.cpp and start the server.
+1. See the repo documentation for instructions on how to build llama.cpp and start the server.
 
 2. Once the server is running, run the chatbot (no .env needed, defaults to localhost:8502 with API key "dummy"):
 
@@ -93,14 +92,11 @@ def main():
 
         for chunk in stream:
 
-            #print(chunk)
-
             try:
                 token = chunk.choices[0].delta.content
+
             except IndexError:
                 token = None
-
-            # token = chunk.choices[0].delta.content
 
             if token:
                 print(token, end='', flush=True)
