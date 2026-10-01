@@ -12,13 +12,21 @@ This section contains lecture slides covering LLM fundamentals, deployment, and 
 
 ## Lesson 44: State of the art in generative AI
 
-Overview of the current LLM landscape, model architectures, and foundational concepts.
+The generative-AI landscape beyond text, and a deep dive into the LLM state of the art — structured in two parts.
 
-**Topics covered:**
-- Decoder-only transformers
-- Tokenization and autoregressive generation
-- Training approaches
-- Current state-of-the-art models
+**Part 1 · The landscape beyond text**
+- The modality picture: text, image, video, audio, and interactive worlds
+- Evergreen architectures: autoregressive, diffusion, mixture-of-experts, world models
+- One dated landscape table (the single snapshot of current models, prices, and scores)
+- Per-modality highlights: image (create + edit, fine-tuning), video (audio, interactive worlds, the Sora discontinuation as a cautionary example), audio (music, TTS, real-time voice)
+- What changed in 2026: agentic frontier, cost stratification, reasoning-effort tiers, native multimodality, specialized model categories, open-weight frontier and sovereign AI
+
+**Part 2 · The LLM state of the art**
+- Frontier closed models as a tiered product family (flagship / near-flagship / cost-and-volume / specialized)
+- Open-weight frontier: Llama 4, DeepSeek V4, Kimi K3, Qwen3, Gemma, Mistral
+- Architecture themes: MoE, reasoning-effort tiers, ~1M context, native multimodality
+- Economics: per-task pricing, cached-input pricing, matching model × effort × context to budget
+- The benchmark shift: from saturated MMLU-style scores to long-horizon agentic evals (Terminal-Bench 4, OSWorld 2, GDPval, Humanity's Last Exam, DeepSWE)
 
 **Location:** `slides/lesson_44_state_of_the_art.md`
 

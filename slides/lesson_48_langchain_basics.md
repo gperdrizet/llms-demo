@@ -278,7 +278,7 @@ The `|` operator (pipe) connects components, similar to Unix pipes.
 
 When you call `chain.invoke(input)`:
 
-1. **Prompt template** receives the input dict, produces messagesLangChain automatically uses the messages to construct the prompt
+1. **Prompt template** receives the input dict, produces messages. LangChain automatically uses the messages to construct the prompt
 2. **LLM** receives messages, generates a response (AIMessage)
 3. **Output parser** receives AIMessage, extracts/parses content
 4. **Final result** is returned to you
@@ -358,10 +358,10 @@ More complex compositions use **RunnableSequence** (advanced topic).
 ## Additional resources
 
 **LangChain documentation:**
-- [Chat models](https://python.langchain.com/docs/modules/model_io/chat/)
-- [Prompt templates](https://python.langchain.com/docs/modules/model_io/prompts/)
-- [Output parsers](https://python.langchain.com/docs/modules/model_io/output_parsers/)
-- [LCEL (chains)](https://python.langchain.com/docs/expression_language/)
+- [Models](https://docs.langchain.com/oss/python/langchain/models.md)
+- [Messages](https://docs.langchain.com/oss/python/langchain/messages.md)
+- [Structured output](https://docs.langchain.com/oss/python/langchain/structured-output.md)
+- [LangChain overview](https://docs.langchain.com/oss/python/langchain/overview.md)
 
 **LangSmith:** Debugging and monitoring platform for LangChain apps
 - [langsmith.com](https://www.langsmith.com/)
