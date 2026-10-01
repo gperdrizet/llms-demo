@@ -12,8 +12,12 @@ Usage:
 '''
 
 import logging
-from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
+from dotenv import load_dotenv
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Suppress noisy key warnings from checkpoint loading
 logging.getLogger("transformers.modeling_utils").setLevel(logging.ERROR)
