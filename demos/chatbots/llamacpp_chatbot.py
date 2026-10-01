@@ -1,30 +1,26 @@
-'''Chat bot demo using a llama.cpp server with the OpenAI-compatible API.
+'''Chat bot demo using a local llama.cpp server or any other OpenAI-compatible API.
 
---- Option 1: Connect to the public class server via the API ---
+
+--- Option 1: Connect to an OpenAI-compatible remote server ---
 
 1. Create a .env file in the repo root with the server address and your API key:
 
-   PERDRIZET_URL=<server-address-provided-in-class>
-   PERDRIZET_API_KEY=<api-key-provided-in-class>
+   OPENAI_API_URL=<server-address>
+   OPENAI_API_KEY=<api-key>
+   OPENAI_API_MODEL=<model-name>
 
 2. Run the chatbot - it will automatically connect to the remote server:
 
    $ python demos/chatbots/llamacpp_chatbot.py
 
+
 --- Option 2: Build and run the server locally ---
 
-See README.md for instructions on how to build llama.cpp and start the server.
+1. See README.md for instructions on how to build llama.cpp and start the server.
 
-Once the server is running, run the chatbot (no .env needed, defaults to localhost:8502 with API key "dummy"):
+2. Once the server is running, run the chatbot (no .env needed, defaults to localhost:8502 with API key "dummy"):
 
    $ python demos/chatbots/llamacpp_chatbot.py
-
----
-
-Environment variables (read from .env file if present):
-- PERDRIZET_URL: Remote server address (default: localhost:8502)
-- PERDRIZET_API_KEY: API key for remote servers
-- LLAMA_API_KEY: API key for localhost (default: "dummy")
 '''
 
 import os
@@ -35,17 +31,8 @@ from openai import OpenAI
 load_dotenv()
 
 # Configuration
-server = os.environ.get('PERDRIZET_URL', 'localhost:8502')
-
-# For localhost, default to 'dummy' API key unless explicitly set
-# For remote servers, use the API key from the environment
-if server.startswith('localhost') or server.startswith('127.'):
-    api_key = os.environ.get('LLAMA_API_KEY', 'dummy')
-    base_url = f'http://{server}/v1'
-
-else:
-    api_key = os.environ.get('PERDRIZET_API_KEY', 'dummy')
-    base_url = f'https://{server}/v1'
+server_url = os.environ.get('OPENAI_API_URL', 'localhost:8502')
+api_key    = os.environ.get('OPENAI_API_KEY', 'dummy')
 
 temperature = 0.7
 
@@ -57,7 +44,7 @@ system_prompt = (
 
 # Initialize the OpenAI client pointing at the llama.cpp server
 client = OpenAI(
-    base_url=base_url,
+    base_url=server_url,
     api_key=api_key,
 )
 
@@ -65,14 +52,16 @@ client = OpenAI(
 models = client.models.list()
 model = models.data[0].id
 
+if '/' in model:
+    model = model.split('/')[-1]
+
 # Start conversation history with system prompt
 history = [{'role': 'system', 'content': system_prompt}]
-
 
 def main():
     '''Main conversation loop.'''
 
-    print(f'Connected to GPT server at {base_url}')
+    print(f'Connected to inference server at {server_url}')
     print(f'Model: {model}')
     print('Type "exit" to quit.\n')
 
@@ -103,7 +92,16 @@ def main():
         assistant_message = ''
 
         for chunk in stream:
-            token = chunk.choices[0].delta.content
+
+            #print(chunk)
+
+            try:
+                token = chunk.choices[0].delta.content
+            except IndexError:
+                token = None
+
+            # token = chunk.choices[0].delta.content
+
             if token:
                 print(token, end='', flush=True)
                 assistant_message += token
