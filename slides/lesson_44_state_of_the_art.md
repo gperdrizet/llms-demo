@@ -125,6 +125,11 @@ Underneath the modality names, a few architecture families recur:
 | **GPT-6 Astra** (OpenAI) | Flagship | $10/$50 per MTok (in/out) · 1.05M context, 128K max output · knowledge cutoff Apr 30 2026 · reasoning effort low→max · tools: functions, web/file search, computer use |
 | **GPT-6.1 Sol** (OpenAI) | Near-flagship | $2/$10 per MTok · cached input $0.10/MTok · released Sep 29 2026 · "≈Astra intelligence at ~1/5 the price" · ≈matches Astra on DeepSWE v1.1 |
 | **GPT-6 Luna** (OpenAI) | Cost / high-volume | $0.10/$0.50 per MTok · knowledge cutoff May 18 2026 |
+
+---
+
+| Model (vendor) | Tier | Key facts |
+|----------------|------|-----------|
 | **GPT-5.6 Cyber / GPT-Rosalind** (OpenAI) | Specialized | Cybersecurity (Cyber + Daybreak Red/Blue) and life-sciences (Rosalind) lines: a specialized product pattern |
 | **Claude Opus 5.5** (Anthropic) | Flagship | Released Sep 22 2026 · complex open-ended work · ≈66.4% Terminal-Bench 4.0 |
 | **Claude Sonnet 5.5** (Anthropic) | Mid | $2/$10 per MTok · cache reads $0.20/MTok · released Sep 28 2026 · 30%+ faster, up to 30% cheaper per task vs Sonnet 5 · ≈70.6% vs ≈10.3% (Sonnet 5) on Terminal-Bench 4.0 · first Sonnet with cyber safeguards + fallbacks |
@@ -144,6 +149,9 @@ Underneath the modality names, a few architecture families recur:
 | **DeepSeek (DeepSeek-V4 / V4.1-Flash)** | V4-Flash-Base 292B (Apr 27); V4.1-Flash focuses on KV-cache compression |
 | **Moonshot (Kimi K3)** | Image-text-to-text; "Open Frontier Intelligence" paper (Jul 27); ≈2.8T total MoE params (approx, confirm framing) |
 | **Alibaba (Qwen3 family)** | Qwen3Guard (safety); Qwen-Image (20B) + Qwen-Image-Edit; docs at qwen.ai |
+---
+| Org (current line) | Key facts |
+|--------------------|-----------|
 | **Google (Gemma)** | Open-model line from DeepMind |
 | **Mistral (Medium 3.5 / Small 4 / OCR 4 / Voxtral TTS)** | €3B Series D at >€21B valuation (Sep 8 2026); explicit "sovereign, open-weight AI" strategy; Mozilla partnership → open multilingual AI in Firefox (Sep 16); products: Studio, Forge, Vibe, Vibe for code, AI Cloud |
 
