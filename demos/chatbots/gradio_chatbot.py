@@ -49,7 +49,6 @@ ollama_client = ChatOllama(
 llamacpp_server = os.environ.get('OPENAI_API_URL', 'localhost:8502')
 llamacpp_api_key = os.environ.get('OPENAI_API_KEY', 'dummy')
 
-
 # Create OpenAI client pointed at llama.cpp server
 llamacpp_client = OpenAI(
     base_url=llamacpp_server,
@@ -179,7 +178,6 @@ with gr.Blocks(title='LLM chatbot demo') as demo:
     chatbot = gr.ChatInterface(
         fn=respond,
         additional_inputs=[backend_selector, system_prompt_input],
-
     )
 
 

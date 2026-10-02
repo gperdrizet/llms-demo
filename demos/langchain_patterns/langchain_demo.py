@@ -38,17 +38,11 @@ temperature = 0.1
 ollama_model = 'qwen2.5:3b'
 ollama_client = ChatOllama(model=ollama_model, temperature=temperature)
 
-llamacpp_server = os.environ.get('PERDRIZET_URL', 'localhost:8502')
-
-if llamacpp_server.startswith('localhost') or llamacpp_server.startswith('127.'):
-    llamacpp_api_key = os.environ.get('LLAMA_API_KEY', 'dummy')
-    llamacpp_base_url = f'http://{llamacpp_server}/v1'
-else:
-    llamacpp_api_key = os.environ.get('PERDRIZET_API_KEY')
-    llamacpp_base_url = f'https://{llamacpp_server}/v1'
+llamacpp_server = os.environ.get('OPENAI_API_URL', 'localhost:8502')
+llamacpp_api_key = os.environ.get('OPENAI_API_KEY', 'dummy')
 
 llamacpp_client = ChatOpenAI(
-    base_url=llamacpp_base_url,
+    base_url=llamacpp_server,
     api_key=llamacpp_api_key,
     timeout=120.0,
     model='gpt-oss-20b',
@@ -277,7 +271,7 @@ with gr.Blocks(title='LangChain Basics Demo') as demo:
             choices=['Ollama', 'llama.cpp'],
             value='Ollama',
             label='Model backend',
-            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_base_url}'
+            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_server}'
         )
     
     # Tabs for different demos
