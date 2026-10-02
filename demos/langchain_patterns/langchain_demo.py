@@ -35,21 +35,20 @@ temperature = 0.1
 
 # --- Initialize backends ---
 
-ollama_model = 'qwen2.5:3b'
-ollama_client = ChatOllama(model=ollama_model, temperature=temperature)
+ollama_model     = 'qwen2.5:3b'
+ollama_client    = ChatOllama(model=ollama_model, temperature=temperature)
 
-llamacpp_server = os.environ.get('OPENAI_API_URL', 'localhost:8502')
+llamacpp_server  = os.environ.get('OPENAI_API_URL', 'localhost:8502')
 llamacpp_api_key = os.environ.get('OPENAI_API_KEY', 'dummy')
+llamacpp_model   = os.environ.get('OPENAI_API_MODEL', 'default')
 
 llamacpp_client = ChatOpenAI(
     base_url=llamacpp_server,
     api_key=llamacpp_api_key,
     timeout=120.0,
-    model='gpt-oss-20b',
+    model=llamacpp_model,
     temperature=temperature
 )
-
-llamacpp_model = 'gpt-oss-20b'
 
 
 # --- Pydantic models for output parsing ---

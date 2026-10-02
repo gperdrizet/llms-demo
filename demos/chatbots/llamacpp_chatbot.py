@@ -31,10 +31,11 @@ from openai import OpenAI
 load_dotenv()
 
 # Configuration
-server_url = os.environ.get('OPENAI_API_URL', 'localhost:8502')
-api_key    = os.environ.get('OPENAI_API_KEY', 'dummy')
-
 temperature = 0.7
+
+llamacpp_server  = os.environ.get('OPENAI_API_URL', 'localhost:8502')
+llamacpp_api_key = os.environ.get('OPENAI_API_KEY', 'dummy')
+llamacpp_model   = os.environ.get('OPENAI_API_MODEL', 'default')
 
 system_prompt = (
     'Reasoning: low\n\n'
@@ -44,20 +45,9 @@ system_prompt = (
 
 # Initialize the OpenAI client pointing at the llama.cpp server
 client = OpenAI(
-    base_url=server_url,
-    api_key=api_key,
+    base_url=llamacpp_server,
+    api_key=llamacpp_api_key,
 )
-
-# Get the model name from the server
-models = client.models.list()
-print('Available models:')
-for m in models.data:
-    print(f' - {m.id}')
-
-model = models.data[0].id
-
-if '/' in model:
-    model = model.split('/')[-1]
 
 # Start conversation history with system prompt
 history = [{'role': 'system', 'content': system_prompt}]
@@ -65,8 +55,8 @@ history = [{'role': 'system', 'content': system_prompt}]
 def main():
     '''Main conversation loop.'''
 
-    print(f'Connected to inference server at {server_url}')
-    print(f'Model: {model}')
+    print(f'Connected to inference server at {llamacpp_server}')
+    print(f'Model: {llamacpp_model}')
     print('Type "exit" to quit.\n')
 
     # Loop until user types 'exit'
@@ -85,13 +75,13 @@ def main():
 
         # Stream the response so tokens appear as they are generated
         stream = client.chat.completions.create(
-            model=model,
+            model=llamacpp_model,
             messages=history,
             temperature=temperature,
             stream=True,
         )
 
-        print(f'\n{model}: ', end='', flush=True)
+        print(f'\n{llamacpp_model}: ', end='', flush=True)
 
         assistant_message = ''
 
