@@ -15,7 +15,8 @@
 
 --- Option 2: Build and run the server locally ---
 
-1. See the repo documentation for instructions on how to build llama.cpp and start the server.
+1. See the repo documentation for 
+instructions on how to build llama.cpp and start the server.
 
 2. Once the server is running, run the chatbot (no .env needed, defaults to localhost:8502 with API key "dummy"):
 

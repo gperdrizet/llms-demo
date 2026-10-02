@@ -46,21 +46,13 @@ ollama_client = ChatOllama(
 # --- Initialize llama.cpp backend (OpenAI-compatible API) ---
 
 # Get server URL from environment, default to localhost
-llamacpp_server = os.environ.get('PERDRIZET_URL', 'localhost:8502')
+llamacpp_server = os.environ.get('OPENAI_API_URL', 'localhost:8502')
+llamacpp_api_key = os.environ.get('OPENAI_API_KEY', 'dummy')
 
-# Configure API key and base URL based on server location
-# Localhost uses 'dummy' key, remote servers use PERDRIZET_API_KEY
-if llamacpp_server.startswith('localhost') or llamacpp_server.startswith('127.'):
-    llamacpp_api_key = os.environ.get('LLAMA_API_KEY', 'dummy')
-    llamacpp_base_url = f'http://{llamacpp_server}/v1'
-
-else:
-    llamacpp_api_key = os.environ.get('PERDRIZET_API_KEY')
-    llamacpp_base_url = f'https://{llamacpp_server}/v1'
 
 # Create OpenAI client pointed at llama.cpp server
 llamacpp_client = OpenAI(
-    base_url=llamacpp_base_url,
+    base_url=llamacpp_server,
     api_key=llamacpp_api_key,
     timeout=120.0,  # 120 second timeout for inference requests
 )
@@ -146,7 +138,7 @@ def respond(message, history, backend, system_prompt):
             # Return helpful error message if llama.cpp server is unreachable
             error_msg = (
                 f'**llama.cpp backend is unavailable**\n\n'
-                f'Make sure the llama-server is running at: `{llamacpp_base_url}`\n\n'
+                f'Make sure the llama-server is running at: `{llamacpp_server}`\n\n'
                 f'To start the server:\n'
                 f'```bash\n'
                 f'llama.cpp/build/bin/llama-server -m <model.gguf> --host 0.0.0.0 --port 8502\n'
@@ -172,7 +164,7 @@ with gr.Blocks(title='LLM chatbot demo') as demo:
             choices=['Ollama', 'llama.cpp'],
             value='llama.cpp',
             label='Model Backend',
-            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_base_url}'
+            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_server}'
         )
     
     # System prompt input - allows customizing model behavior
