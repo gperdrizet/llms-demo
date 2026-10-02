@@ -171,27 +171,35 @@ def parse_action(text: str) -> Optional[Tuple[str, str]]:
     if match:
         tool_name = match.group(1)
         args_str = match.group(2).strip()
+
         return (tool_name, args_str)
     
     # Pattern 2: Bare tool call without "Action:" prefix
     # Look for known tool names followed by parentheses
     for tool_name in TOOLS.keys():
+
         pattern2 = rf'\b{tool_name}\s*\((.*?)\)'
         match = re.search(pattern2, text, re.IGNORECASE)
+
         if match:
             args_str = match.group(1).strip()
+
             return (tool_name, args_str)
     
     # Pattern 3: JSON format with start_date/end_date (indicates days_between call)
     json_pattern = r'\{[^}]*"start_date"[^}]*"end_date"[^}]*\}'
     json_match = re.search(json_pattern, text)
+
     if json_match:
         try:
             json_obj = json.loads(json_match.group(0))
+
             if 'start_date' in json_obj and 'end_date' in json_obj:
                 # Convert to function call format
                 args_str = f'"{json_obj["start_date"]}", "{json_obj["end_date"]}"'
+
                 return ('days_between', args_str)
+
         except:
             pass
     
@@ -207,6 +215,7 @@ def parse_answer(text: str) -> Optional[str]:
     Returns:
         The answer text or None if not found
     """
+
     # Look for Answer: <text>
     pattern = r'Answer:\s*(.+?)(?:\n|$)'
     match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
@@ -227,6 +236,7 @@ def execute_tool(tool_name: str, args_str: str) -> str:
     Returns:
         Tool execution result or error message
     """
+
     if tool_name not in TOOLS:
         return f"Error: Unknown tool '{tool_name}'. Available tools: {', '.join(TOOLS.keys())}"
     
@@ -253,6 +263,7 @@ def execute_tool(tool_name: str, args_str: str) -> str:
             
             # Call the tool with parsed arguments
             result = tool_func.func(*args) if hasattr(tool_func, 'func') else tool_func(*args)
+
         else:
             # No arguments
             result = tool_func.func() if hasattr(tool_func, 'func') else tool_func()
@@ -302,6 +313,7 @@ def run_react_loop(question: str, llm: Any) -> Tuple[str, List[str]]:
             
             # Extract and show "Thought:" if present
             thought_match = re.search(r'Thought:\s*(.+?)(?=\nAction:|Action:|\nAnswer:|Answer:|$)', response_text, re.IGNORECASE | re.DOTALL)
+
             if thought_match:
                 reasoning_steps.append(f"Thought: {thought_match.group(1).strip()}")
             
@@ -313,8 +325,9 @@ def run_react_loop(question: str, llm: Any) -> Tuple[str, List[str]]:
             # Add observation to conversation
             messages.append(AIMessage(content=response_text))
             messages.append(HumanMessage(content=f"Observation: {observation}"))
+
             continue
-        
+
         # Check for final answer (only if no action was found)
         answer = parse_answer(response_text)
 
@@ -323,22 +336,25 @@ def run_react_loop(question: str, llm: Any) -> Tuple[str, List[str]]:
             
             # Extract and show "Thought:" if present before the answer
             thought_match = re.search(r'Thought:\s*(.+?)(?=\nAnswer:|Answer:|$)', response_text, re.IGNORECASE | re.DOTALL)
+
             if thought_match:
                 thought_text = thought_match.group(1).strip()
+                
                 # Make sure we don't capture the answer itself
                 if not thought_text.startswith(answer):
                     reasoning_steps.append(f"Thought: {thought_text}")
-            
+
             # Show the answer
             reasoning_steps.append(f"Answer: {answer}")
             reasoning_steps.append("")
+            
             return answer, reasoning_steps
 
         # No action or answer pattern found - treat as final response
         reasoning_steps.append(f"**Iteration {iteration + 1}:**")
         reasoning_steps.append(response_text)
         reasoning_steps.append("")
-        
+
         # Extract text after "Thought:" (but not including "Action:")
         # Use a non-greedy match that stops at "Action:" or end of string
         thought_match = re.search(r'Thought:\s*(.+?)(?=\nAction:|$)', response_text, re.IGNORECASE | re.DOTALL)
@@ -348,9 +364,10 @@ def run_react_loop(question: str, llm: Any) -> Tuple[str, List[str]]:
 
         else:
             return response_text, reasoning_steps
-    
+
     # Max iterations reached
     reasoning_steps.append("**Error:** Maximum iterations reached without finding answer")
+
     return "I apologize, but I couldn't solve this problem within the iteration limit.", reasoning_steps
 
 
@@ -385,7 +402,7 @@ def respond(message: str, history: List, backend: str) -> Tuple[str, str]:
             f'**Troubleshooting:**\n'
             f'- Make sure the selected backend is running\n'
             f'- Ollama: `ollama serve`\n'
-            f'- llama.cpp: check server at {llamacpp_base_url}\n'
+            f'- llama.cpp: check server at {llamacpp_server}\n'
             f'- Try a simpler question'
         )
         

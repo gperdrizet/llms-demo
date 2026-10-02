@@ -210,7 +210,7 @@ def respond(message, history, backend):
             f'**Troubleshooting:**\n'
             f'- Make sure the selected backend is running\n'
             f'- Ollama: `ollama serve`\n'
-            f'- llama.cpp: check server at {llamacpp_base_url}\n'
+            f'- llama.cpp: check server at {llamacpp_server}\n'
             f'- Try a simpler question'
         )
 
@@ -258,7 +258,7 @@ with gr.Blocks(title='ReAct Agent Demo') as demo:
             choices=['Ollama', 'llama.cpp'],
             value='Ollama',
             label='Model Backend',
-            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_base_url}'
+            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_server}'
         )
     
     # Example questions
