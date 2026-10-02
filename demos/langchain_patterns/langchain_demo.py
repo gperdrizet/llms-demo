@@ -124,10 +124,12 @@ def demo_sentiment_analysis(text: str, backend: str) -> tuple[str, str]:
     
     try:
         # Execute
-        result = chain.invoke({
-            "text": text,
-            "format_instructions": parser.get_format_instructions()
-        })
+        result = chain.invoke(
+            {
+                "text": text,
+                "format_instructions": parser.get_format_instructions()
+            }
+        )
         
         # Format output
         output = f"""**Sentiment:** {result['sentiment']}
