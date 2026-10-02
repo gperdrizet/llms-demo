@@ -49,6 +49,10 @@ client = OpenAI(
 
 # Get the model name from the server
 models = client.models.list()
+print('Available models:')
+for m in models.data:
+    print(f' - {m.id}')
+
 model = models.data[0].id
 
 if '/' in model:
