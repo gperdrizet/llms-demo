@@ -24,6 +24,8 @@ Direct model loading and inference in Python without an external server.
 | Variable | Purpose |
 |----------|----------|
 | `HF_HOME` | Base directory for HuggingFace files (default `~/.cache/huggingface`) |
+| `HF_HUB_CACHE` | Hub model and dataset cache directory |
+| `TRANSFORMERS_CACHE` | Legacy Transformers cache setting included in `.env.example`; use `HF_HOME` and `HF_HUB_CACHE` for current libraries |
 | `HF_TOKEN` | HuggingFace API token (required for gated models) |
 
 ### Example usage

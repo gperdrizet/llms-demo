@@ -74,12 +74,14 @@ You have two choices: use the hosted model at `gpt.perdrizet.org`, or run llama.
 **Option 1: Using the remote server (recommended for quick start)**
 
 ```bash
-# 1. Create a .env file with your API credentials
+# 1. Create a .env file (only if you do not already have one)
 cp .env.example .env
 
 # 2. Edit .env and set:
-#    PERDRIZET_URL=gpt.perdrizet.org
-#    PERDRIZET_API_KEY=your-api-key-here
+#    OPENAI_API_URL=https://<your-server>/v1
+#    OPENAI_API_KEY=your-api-key-here
+#    OPENAI_API_MODEL=your-model-name
+#    Use the exact base URL and model name supplied by your instructor/provider.
 
 # 3. Run the chatbot
 python demos/chatbots/llamacpp_chatbot.py
@@ -104,7 +106,12 @@ llama.cpp/build/bin/llama-server -m <model.gguf> <flags...>
 python demos/chatbots/llamacpp_chatbot.py
 ```
 
-> **Note**: For localhost, the defaults work automatically (localhost:8502 with "dummy" API key). For remote servers, configure `PERDRIZET_URL` and `PERDRIZET_API_KEY` in your `.env` file.
+> **Note**: For both local and remote servers, configure `OPENAI_API_URL`,
+> `OPENAI_API_KEY`, and `OPENAI_API_MODEL` in `.env`. Use a full API base URL,
+> such as `http://localhost:8502/v1` for a local llama.cpp server, and the exact
+> model name served by that endpoint. If your local server does not require
+> authentication, use `dummy` as the API key. Replace the example file's
+> placeholders; they are not working defaults.
 
 ## Demo 4: Gradio chatbot
 

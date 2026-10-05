@@ -37,6 +37,10 @@ ollama rm qwen2.5:3b
 | `OLLAMA_MODELS` | Directory where models are stored |
 | `OLLAMA_HOST` | Server address (default `127.0.0.1:11434`) |
 
+`OLLAMA_MODELS` is included in `.env.example`. `OLLAMA_HOST` is an optional
+Ollama server setting, not a template entry. Export these in the shell that
+starts `ollama serve`; the server does not automatically read the demos' `.env`.
+
 ---
 
 ## llama.cpp
