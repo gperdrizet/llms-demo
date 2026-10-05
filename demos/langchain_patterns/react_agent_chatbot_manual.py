@@ -35,7 +35,7 @@ import gradio as gr
 from dotenv import load_dotenv
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+from openai import OpenAI
 
 # Add src directory to path for tool imports
 sys.path.insert(0, str(Path(__file__).parent))
@@ -48,7 +48,7 @@ load_dotenv()
 
 # --- Configuration ---
 
-temperature = 0.7
+temperature = 0.0
 MAX_ITERATIONS = 10  # Prevent infinite loops
 
 # --- Initialize Ollama backend ---
@@ -58,19 +58,21 @@ ollama_client = ChatOllama(model=ollama_model, temperature=temperature)
 
 # --- Initialize llama.cpp backend ---
 
-ollama_model     = 'qwen2.5:3b'
-ollama_client    = ChatOllama(model=ollama_model, temperature=temperature)
-
 llamacpp_server  = os.environ.get('OPENAI_API_URL', 'localhost:8502')
 llamacpp_api_key = os.environ.get('OPENAI_API_KEY', 'dummy')
 llamacpp_model   = os.environ.get('OPENAI_API_MODEL', 'default')
 
-llamacpp_client = ChatOpenAI(
-    base_url=llamacpp_server,
+# llamacpp_client = ChatOpenAI(
+#     base_url=llamacpp_server,
+#     api_key=llamacpp_api_key,
+#     timeout=120.0,
+#     model=llamacpp_model,
+#     temperature=temperature
+# )
+
+llamacpp_client = OpenAI(
     api_key=llamacpp_api_key,
-    timeout=120.0,
-    model=llamacpp_model,
-    temperature=temperature
+    base_url=llamacpp_server
 )
 
 # --- Tool registry ---
@@ -195,6 +197,7 @@ def parse_action(text: str) -> Optional[Tuple[str, str]]:
             json_obj = json.loads(json_match.group(0))
 
             if 'start_date' in json_obj and 'end_date' in json_obj:
+
                 # Convert to function call format
                 args_str = f'"{json_obj["start_date"]}", "{json_obj["end_date"]}"'
 
@@ -219,7 +222,7 @@ def parse_answer(text: str) -> Optional[str]:
     # Look for Answer: <text>
     pattern = r'Answer:\s*(.+?)(?:\n|$)'
     match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
-    
+
     if match:
         return match.group(1).strip()
     
@@ -286,8 +289,8 @@ def run_react_loop(question: str, llm: Any) -> Tuple[str, List[str]]:
     """
 
     messages = [
-        SystemMessage(content=SYSTEM_PROMPT),
-        HumanMessage(content=question)
+        {'role': 'system', 'content': SYSTEM_PROMPT},
+        {'role': 'user', 'content': question},
     ]
     
     reasoning_steps = []
@@ -295,9 +298,29 @@ def run_react_loop(question: str, llm: Any) -> Tuple[str, List[str]]:
     
     for iteration in range(MAX_ITERATIONS):
 
-        # Get LLM response
-        response = llm.invoke(messages)
-        response_text = response.content
+        stream = llamacpp_client.chat.completions.create(
+            model=llamacpp_model,
+            messages=messages,
+            temperature=temperature,
+            stream=True
+        )
+
+        # Extract the raw text containing "Thought: / Action:" steps
+        response_text = ""
+
+        for chunk in stream:
+            if chunk.choices:
+                delta = chunk.choices[0].delta
+                
+                # 1. Capture the Harmony format reasoning tokens (Where your ReAct steps live!)
+                if hasattr(delta, 'reasoning_content') and delta.reasoning_content:
+                    response_text += delta.reasoning_content
+                    
+                # 2. Fallback to standard content tokens 
+                elif hasattr(delta, 'content') and delta.content:
+                    response_text += delta.content
+
+        print(response_text) 
         
         # Check for action first (priority over answer detection)
         action = parse_action(response_text)
@@ -323,8 +346,8 @@ def run_react_loop(question: str, llm: Any) -> Tuple[str, List[str]]:
             reasoning_steps.append("")
             
             # Add observation to conversation
-            messages.append(AIMessage(content=response_text))
-            messages.append(HumanMessage(content=f"Observation: {observation}"))
+            messages.append({'role': 'system', 'content': response_text})
+            messages.append({'role': 'user', 'content': f"Observation: {observation}"})
 
             continue
 
@@ -377,7 +400,7 @@ def respond(message: str, history: List, backend: str) -> Tuple[str, str]:
     Args:
         message: User's current message
         history: Chat history from Gradio (ignored - we maintain our own state)
-        backend: Either 'Ollama' or 'llama.cpp'
+        backend: Either 'Ollama' or 'OpenAI compatible'
     
     Returns:
         Tuple of (response_text, reasoning_steps_text)
@@ -402,7 +425,7 @@ def respond(message: str, history: List, backend: str) -> Tuple[str, str]:
             f'**Troubleshooting:**\n'
             f'- Make sure the selected backend is running\n'
             f'- Ollama: `ollama serve`\n'
-            f'- llama.cpp: check server at {llamacpp_server}\n'
+            f'- OpenAI compatible: check server at {llamacpp_server}\n'
             f'- Try a simpler question'
         )
         
@@ -457,10 +480,10 @@ with gr.Blocks(title='Manual ReAct Agent Demo') as demo:
     # Backend selector
     with gr.Row():
         backend_selector = gr.Radio(
-            choices=['Ollama', 'llama.cpp'],
-            value='Ollama',
+            choices=['Ollama', 'OpenAI compatible'],
+            value='OpenAI compatible',
             label='Model Backend',
-            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_base_url}'
+            info=f'Ollama: {ollama_model} | OpenAI compatible: {llamacpp_model} @ {llamacpp_server}'
         )
     
     # Example questions

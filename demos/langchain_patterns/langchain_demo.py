@@ -269,10 +269,10 @@ with gr.Blocks(title='LangChain Basics Demo') as demo:
     # Backend selector (shared across all tabs)
     with gr.Row():
         backend_selector = gr.Radio(
-            choices=['Ollama', 'llama.cpp'],
-            value='Ollama',
+            choices=['Ollama', 'OpenAI compatible'],
+            value='OpenAI compatible',
             label='Model backend',
-            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_server}'
+            info=f'Ollama: {ollama_model} | OpenAI compatible: {llamacpp_model} @ {llamacpp_server}'
         )
     
     # Tabs for different demos

@@ -1,4 +1,5 @@
 wikipedia
+requests
 peft
 trl
 evaluate

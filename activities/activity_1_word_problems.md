@@ -39,7 +39,7 @@ Open your browser to `http://localhost:7860` (or the URL shown in the terminal).
 
 The interface has three main sections:
 
-1. **Backend selector** - Choose between Ollama or llama.cpp
+1. **Backend selector** - Choose between Ollama or OpenAI compatible (including llama.cpp)
 2. **System Prompt field** - This is where you'll experiment with different prompting strategies
 3. **Chat interface** - Where you send messages and see responses
 

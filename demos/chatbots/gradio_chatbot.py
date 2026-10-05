@@ -1,8 +1,8 @@
 '''
-Gradio chatbot with selectable backend (Ollama or llama.cpp).
+Gradio chatbot with selectable backend (Ollama or OpenAI compatible).
 
 This demo provides a web UI where users can:
-- Choose between Ollama and llama.cpp backends
+- Choose between Ollama and OpenAI compatible backends
 - Customize the system prompt
 - Have multi-turn conversations with context
 
@@ -48,6 +48,7 @@ ollama_client = ChatOllama(
 # Get server URL from environment, default to localhost
 llamacpp_server = os.environ.get('OPENAI_API_URL', 'localhost:8502')
 llamacpp_api_key = os.environ.get('OPENAI_API_KEY', 'dummy')
+llamacpp_model = os.environ.get('OPENAI_API_MODEL', 'default')
 
 # Create OpenAI client pointed at llama.cpp server
 llamacpp_client = OpenAI(
@@ -56,9 +57,6 @@ llamacpp_client = OpenAI(
     timeout=120.0,  # 120 second timeout for inference requests
 )
 
-# Use a default model name (actual model is determined by server configuration)
-llamacpp_model = 'gpt-oss-20b'
-
 
 def respond(message, history, backend, system_prompt):
     '''Sends message to selected model backend, gets response back.
@@ -66,7 +64,7 @@ def respond(message, history, backend, system_prompt):
     Args:
         message: User's current message
         history: List of [user_msg, assistant_msg] pairs from Gradio
-        backend: Either 'Ollama' or 'llama.cpp'
+        backend: Either 'Ollama' or 'OpenAI compatible'
         system_prompt: System prompt to set model behavior
     
     Returns:
@@ -136,9 +134,9 @@ def respond(message, history, backend, system_prompt):
 
             # Return helpful error message if llama.cpp server is unreachable
             error_msg = (
-                f'**llama.cpp backend is unavailable**\n\n'
-                f'Make sure the llama-server is running at: `{llamacpp_server}`\n\n'
-                f'To start the server:\n'
+                f'**OpenAI compatible backend is unavailable**\n\n'
+                f'Make sure the OpenAI compatible server is running at: `{llamacpp_server}`\n\n'
+                f'To start a local llama.cpp server:\n'
                 f'```bash\n'
                 f'llama.cpp/build/bin/llama-server -m <model.gguf> --host 0.0.0.0 --port 8502\n'
                 f'```\n\n'
@@ -157,13 +155,13 @@ with gr.Blocks(title='LLM chatbot demo') as demo:
     # Page title and description
     gr.Markdown('# LLM chatbot demo')
     
-    # Backend selector - radio buttons for Ollama vs llama.cpp
+    # Backend selector - radio buttons for Ollama vs OpenAI compatible
     with gr.Row():
         backend_selector = gr.Radio(
-            choices=['Ollama', 'llama.cpp'],
-            value='llama.cpp',
+            choices=['Ollama', 'OpenAI compatible'],
+            value='OpenAI compatible',
             label='Model Backend',
-            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_server}'
+            info=f'Ollama: {ollama_model} | OpenAI compatible: {llamacpp_model} @ {llamacpp_server}'
         )
     
     # System prompt input - allows customizing model behavior

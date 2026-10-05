@@ -82,7 +82,7 @@ def create_agent_for_backend(backend: str):
     """Create a LangChain agent for the specified backend.
     
     Args:
-        backend: Either 'Ollama' or 'llama.cpp'
+        backend: Either 'Ollama' or 'OpenAI compatible'
     
     Returns:
         Compiled agent graph
@@ -165,7 +165,7 @@ def respond(message, history, backend):
     Args:
         message: User's current message
         history: Chat history from Gradio (ignored - agent handles its own state)
-        backend: Either 'Ollama' or 'llama.cpp'
+        backend: Either 'Ollama' or 'OpenAI compatible'
     
     Returns:
         Tuple of (response_text, reasoning_steps_text)
@@ -210,7 +210,7 @@ def respond(message, history, backend):
             f'**Troubleshooting:**\n'
             f'- Make sure the selected backend is running\n'
             f'- Ollama: `ollama serve`\n'
-            f'- llama.cpp: check server at {llamacpp_server}\n'
+            f'- OpenAI compatible: check server at {llamacpp_server}\n'
             f'- Try a simpler question'
         )
 
@@ -255,10 +255,10 @@ with gr.Blocks(title='ReAct Agent Demo') as demo:
     with gr.Row():
 
         backend_selector = gr.Radio(
-            choices=['Ollama', 'llama.cpp'],
-            value='Ollama',
+            choices=['Ollama', 'OpenAI compatible'],
+            value='OpenAI compatible',
             label='Model Backend',
-            info=f'Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_server}'
+            info=f'Ollama: {ollama_model} | OpenAI compatible: {llamacpp_model} @ {llamacpp_server}'
         )
     
     # Example questions

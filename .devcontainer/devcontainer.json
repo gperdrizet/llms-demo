@@ -3,9 +3,9 @@
 {
 	// Container definition
 	"name": "LLM application development",
-	"image": "gperdrizet/llms-gpu",
+	"image": "gperdrizet/llms-cpu",
     "runArgs": [
-		"--gpus", "all",              // Enable all available GPUs in the container
+		//"--gpus", "all",              // Enable all available GPUs in the container
 		"--pid=host",                 // Use host PIDs, needed for nvidia-smi process list
 		"--ipc=host",                 // Connect to host interprocess namespace
 		"--ulimit", "memlock=-1",     // Turn of memory lock limit

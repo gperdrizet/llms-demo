@@ -93,25 +93,17 @@ vector_store = PGVector(
 ollama_model = "qwen2.5:3b"
 ollama_client = ChatOllama(model=ollama_model, temperature=temperature)
 
-llamacpp_server = os.environ.get("PERDRIZET_URL", "localhost:8502")
-
-if llamacpp_server.startswith("localhost") or llamacpp_server.startswith("127."):
-    llamacpp_api_key = os.environ.get("LLAMA_API_KEY", "dummy")
-    llamacpp_base_url = f"http://{llamacpp_server}/v1"
-
-else:
-    llamacpp_api_key = os.environ.get("PERDRIZET_API_KEY")
-    llamacpp_base_url = f"https://{llamacpp_server}/v1"
+llamacpp_server  = os.environ.get('OPENAI_API_URL', 'localhost:8502')
+llamacpp_api_key = os.environ.get('OPENAI_API_KEY', 'dummy')
+llamacpp_model   = os.environ.get('OPENAI_API_MODEL', 'default')
 
 llamacpp_client = ChatOpenAI(
-    base_url=llamacpp_base_url,
+    base_url=llamacpp_server,
     api_key=llamacpp_api_key,
     timeout=120.0,
-    model="gpt-oss-20b",
-    temperature=temperature,
+    model=llamacpp_model,
+    temperature=temperature
 )
-
-llamacpp_model = "gpt-oss-20b"
 
 # ---------------------------------------------------------------------------
 # Ingestor registry
@@ -382,10 +374,10 @@ with gr.Blocks(title="RAG Knowledge System") as demo:
 
             with gr.Row():
                 backend_selector = gr.Radio(
-                    choices=["Ollama", "llama.cpp"],
-                    value="llama.cpp",
+                    choices=["Ollama", "OpenAI compatible"],
+                    value="OpenAI compatible",
                     label="Model backend",
-                    info=f"Ollama: {ollama_model} | llama.cpp: {llamacpp_model} @ {llamacpp_base_url}",
+                    info=f"Ollama: {ollama_model} | OpenAI compatible: {llamacpp_model} @ {llamacpp_server}",
                 )
                 k_slider = gr.Slider(
                     minimum=1,

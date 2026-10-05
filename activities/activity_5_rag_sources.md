@@ -61,9 +61,16 @@ Open `demos/rag_system/ingestors/base.py`. Note:
 
 ### Step 2: Read the Wikipedia ingestor
 
-Open `demos/rag_system/ingestors/wikipedia.py`. The full implementation is only ~25 lines:
-- It wraps `WikipediaLoader` to fetch articles by search query
+Open `demos/rag_system/ingestors/wikipedia.py`:
+- It queries Wikipedia's HTTPS API to search for articles and fetch their text
+- It checks HTTP and API errors before parsing results, so rate limits are reported clearly
 - It passes the raw documents through `RecursiveCharacterTextSplitter` so they become small chunks
+- It preserves article title, source URL, and summary metadata
+
+If ingestion reports **HTTP 429**, Wikipedia is rate limiting requests. Wait before
+retrying (follow `Retry-After` if shown), and try fewer articles with
+`WikipediaIngestor(load_max_docs=1)`. Non-JSON responses can also indicate a proxy
+or network filter; these errors occur before embedding or database storage.
 
 ### Step 3: Test the Wikipedia ingestor
 
@@ -82,7 +89,7 @@ print(f"\nMetadata: {docs[0].metadata}")
 
 **Questions to consider:**
 - How large is each chunk in characters?
-- What metadata fields does `WikipediaLoader` attach?
+- What metadata fields does `WikipediaIngestor` attach?
 - What happens if you search for a topic that doesn't exist on Wikipedia?
 
 ---

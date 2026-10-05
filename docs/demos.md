@@ -112,7 +112,7 @@ python demos/chatbots/llamacpp_chatbot.py
 
 **Concepts covered:**
 - Web-based chat interfaces
-- Multi-backend architecture (switching between Ollama/llama.cpp)
+- Multi-backend architecture (switching between Ollama/OpenAI compatible)
 - System prompt customization
 - Error handling and user feedback
 
@@ -287,7 +287,7 @@ python demos/langchain_patterns/react_agent_chatbot_manual.py
 # 1. Ensure PostgreSQL with pgvector is accessible and .env is configured
 #    (DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME)
 
-# 2. Start your LLM backend (llama.cpp is the default)
+# 2. Start your LLM backend (OpenAI compatible is the default selector option)
 ollama serve   # or start llama-server
 
 # 3. Run the RAG demo
@@ -300,13 +300,13 @@ python demos/rag_system/rag_demo.py
 
 1. **Ingest**: Choose a source (Wikipedia), enter a topic, and click **Ingest** to embed and store chunks in the knowledge base
 2. **Query**: Ask questions - the retriever finds the most relevant chunks and passes them as context to the LLM
-3. **Settings**: Switch between Ollama and llama.cpp backends; clear the vector store collection
+3. **Settings**: Clear the vector store collection. The **Query** tab's backend selector switches between Ollama and OpenAI compatible servers (including llama.cpp).
 
 **What to observe:**
 - The **Sources** panel shows which document chunks were retrieved for each answer
 - Ingest the same topic twice to see deduplication behaviour
 - Ask a question about something *not* ingested - notice how the grounded answer differs from a hallucinated one
-- Switch backends (Ollama vs. llama.cpp) to compare answer quality
+- Switch backends (Ollama vs. OpenAI compatible) to compare answer quality
 
 ## Demo 8: Fine-tuning and alignment demo
 

@@ -36,7 +36,7 @@ This repository contains chatbot demos and hands-on activities for learning prom
 - **HuggingFace chatbot**: Direct model loading with Transformers — no inference server needed
 - **Ollama chatbot**: Terminal chatbot using LangChain + a local Ollama server
 - **llama.cpp chatbot**: Terminal chatbot using the OpenAI-compatible llama.cpp API
-- **Gradio chatbot**: Web UI with switchable Ollama / llama.cpp backends and customizable system prompt
+- **Gradio chatbot**: Web UI with switchable Ollama / OpenAI compatible backends and customizable system prompt
 
 **LangChain patterns** (`demos/langchain_patterns/`)
 - **LangChain demo**: Prompt templates, output parsers, LCEL chains, and few-shot learning
@@ -61,4 +61,3 @@ See the [Quickstart](quickstart.md) guide for installation and setup, then explo
 
 - [GitHub repository](https://github.com/gperdrizet/llms-demo)
 - [Docker image](https://hub.docker.com/repository/docker/gperdrizet/llms-gpu/general)
-
