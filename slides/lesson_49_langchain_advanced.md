@@ -72,7 +72,9 @@ After the slides: **Demo 6** (ReAct agent) and **Demo 7** (RAG system) bring all
 | **2023-2024** | Opinionated framework: LCEL pipes, `AgentExecutor`, `initialize_agent` | Abstractions grew faster than the underlying APIs evolved |
 | **1.0 (2025)** | Minimal harness: `create_agent` + middleware; LangGraph for complex graphs | Provider APIs matured (native tool calling, structured output); thin wrappers became sufficient |
 
-**Practical note:** most YouTube tutorials and older blog posts show the 2023-2024 API. If a snippet uses `AgentExecutor` or `initialize_agent`, it won't work against current LangChain. Current docs: [docs.langchain.com](https://docs.langchain.com)
+---
+
+**Practical note:** Some YouTube tutorials and older blog posts show the 2023-2024 LangChain API. If a snippet uses `AgentExecutor` or `initialize_agent`, it won't work against current LangChain. Current docs: [docs.langchain.com](https://docs.langchain.com)
 
 ---
 
@@ -212,6 +214,8 @@ Text splitters divide documents into **chunks** small enough to embed and retrie
 - `chunk_size` - maximum characters per chunk
 - `chunk_overlap` - characters shared between adjacent chunks (preserves context at boundaries)
 
+---
+
 | Splitter | Strategy |
 |----------|----------|
 | `RecursiveCharacterTextSplitter` | Splits on `\n\n`, `\n`, ` `, `""` in order - preserves structure |
@@ -229,7 +233,7 @@ convert text into dense numerical vectors that capture semantic meaning.
 
 Similar meaning → similar vectors → close together in vector space.
 
-**This is what makes semantic search possible** - you aren't matching keywords, you're matching meaning.
+**This is semantic search ** - it matches on meaning, not keywords.
 
 | Class | Model | Notes |
 |-------|-------|-------|
@@ -308,9 +312,9 @@ Each tool has:
 - A **description** - natural language explanation (docstring)
 - An **input schema** - what arguments it expects
 
-**The description is critical** - the LLM reads it to decide whether to use the tool. Vague descriptions lead to wrong tool selection.
+**The description is critical** - the LLM reads it to decide whether to use the tool. 
 
-LangChain provides built-in tools (`DuckDuckGoSearchRun`, `WikipediaQueryRun`, `PythonREPLTool`) and a `@tool` decorator for defining custom Python functions as tools.
+LangChain provides built-in tools and a `@tool` decorator for defining custom Python functions as tools.
 
 ---
 
@@ -328,8 +332,6 @@ Each step follows a strict cycle:
 
 The cycle repeats until the LLM produces a **Final Answer** instead of an Action.
 
-This structure keeps the LLM grounded - it must justify each action with explicit reasoning.
-
 ---
 
 ## Agent components in LangChain
@@ -340,7 +342,7 @@ LangChain 1.0+ provides **`create_agent`** as the primary entry point:
 from langchain.agents import create_agent
 
 agent = create_agent(
-    model="openai:gpt-4o",          # any LangChain chat model
+    model="openai:gpt-4o",           # any LangChain chat model
     tools=[get_weather, search_web], # @tool-decorated functions
     system_prompt="You are a helpful assistant",
 )
@@ -348,6 +350,10 @@ result = agent.invoke(
     {"messages": [{"role": "user", "content": "What's the weather in SF?"}]}
 )
 ```
+
+---
+
+## Agent components in LangChain
 
 | Component | Role |
 |-----------|------|

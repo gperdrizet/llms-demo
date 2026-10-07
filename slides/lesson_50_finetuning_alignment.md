@@ -185,20 +185,6 @@ Famous instruction-tuning datasets: **Alpaca** (52k examples), **FLAN** (1,800+ 
 
 ---
 
-## LoRA: how training works
-
-**Step 1 - Freeze the base model.** All original weights W are locked - no gradients flow through them.
-
-**Step 2 - Inject adapter pairs.** For each target layer (usually the attention projection matrices), add two small trainable matrices A and B initialized so B·A = 0 at the start of training.
-
-**Step 3 - Train only the adapters.** Forward pass uses `W·x + (B·A)·x`. Gradients update only A and B.
-
-**Step 4 - Merge or keep separate.** At inference you can either:
-- **Merge:** fold B·A into W (ΔW = B·A), zero extra cost at runtime
-- **Keep separate:** swap adapters in/out to serve multiple fine-tunes from one base model
-
----
-
 ## LoRA: Low-Rank Adaptation
 
 **LoRA** (Hu et al., 2021) fine-tunes a small number of new parameters while keeping the original weights frozen.
@@ -214,6 +200,20 @@ LoRA:      output = W · x  +  (B · A) · x
 **Why two matrices and not one?** With r=8 on a 4096×4096 layer: a full ΔW costs **16.7M** params, but B·A costs only **65K** (~256× smaller).
 
 The bottleneck rank `r` forces adaptation through a low-dimensional subspace - the same idea as PCA/SVD.
+
+---
+
+## LoRA: how training works
+
+**Step 1 - Freeze the base model.** All original weights W are locked - no gradients flow through them.
+
+**Step 2 - Inject adapter pairs.** For each target layer (usually the attention projection matrices), add two small trainable matrices A and B initialized so B·A = 0 at the start of training.
+
+**Step 3 - Train only the adapters.** Forward pass uses `W·x + (B·A)·x`. Gradients update only A and B.
+
+**Step 4 - Merge or keep separate.** At inference you can either:
+- **Merge:** fold B·A into W (ΔW = B·A), zero extra cost at runtime
+- **Keep separate:** swap adapters in/out to serve multiple fine-tunes from one base model
 
 ---
 
