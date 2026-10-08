@@ -112,7 +112,7 @@ def run_benchmark(client: OpenAI, model: str, category_filter: str) -> str:
                 model=model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.0,
-                max_tokens=4,
+                max_tokens=512,
             )
             raw = response.choices[0].message.content.strip().upper()
             letter = raw[0] if raw else "?"

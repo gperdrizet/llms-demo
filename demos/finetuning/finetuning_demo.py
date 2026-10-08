@@ -2,7 +2,7 @@
 
 This demo illustrates the behavioral differences that fine-tuning produces by
 comparing a genuine base model against its instruction-tuned counterpart, both
-loaded locally via HuggingFace transformers.  It also includes a dataset
+loaded locally via HuggingFace transformers. It also includes a dataset
 formatter tab that shows what SFT and DPO training data actually looks like.
 
 Tabs:

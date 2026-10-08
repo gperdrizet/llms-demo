@@ -21,6 +21,8 @@ Usage:
 
 import os
 import functools
+from dotenv import load_dotenv
+
 import gradio as gr
 from openai import OpenAI
 
@@ -30,6 +32,7 @@ from judge import judge_answer, JUDGE_SYSTEM_PROMPT
 
 
 # --- Configuration ---
+load_dotenv()
 
 # Choose the inference server backend ('ollama' or 'openai')
 INFERENCE_BACKEND = 'openai'
@@ -39,7 +42,7 @@ if INFERENCE_BACKEND == 'ollama':
     # Ollama exposes an OpenAI-compatible API at localhost:11434/v1
     BASE_URL = "http://localhost:11434/v1"
     MODEL = "qwen2.5:3b"
-    KEY = "ollama",  # Ollama does not check the key; any non-empty string works
+    KEY = "ollama"  # Ollama does not check the key; any non-empty string works
 
 elif INFERENCE_BACKEND == 'openai':
 
@@ -58,7 +61,7 @@ else:
 client = OpenAI(
     base_url=BASE_URL,
     api_key=KEY,
-    timeout=120.0,
+    timeout=120.0
 )
 
 # Bind client and model into the functions so Gradio only sees the UI inputs
