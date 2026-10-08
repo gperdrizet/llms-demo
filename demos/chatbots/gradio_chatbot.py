@@ -124,7 +124,7 @@ def respond(message, history, backend, system_prompt):
             response = llamacpp_client.chat.completions.create(
                 model=llamacpp_model,
                 messages=messages,
-                temperature=temperature,
+                #temperature=temperature,
             )
             
             # Extract and return response text

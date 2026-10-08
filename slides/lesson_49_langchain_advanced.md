@@ -350,7 +350,6 @@ result = agent.invoke(
     {"messages": [{"role": "user", "content": "What's the weather in SF?"}]}
 )
 ```
-
 ---
 
 ## Agent components in LangChain

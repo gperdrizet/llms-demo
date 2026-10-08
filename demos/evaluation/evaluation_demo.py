@@ -19,6 +19,7 @@ Usage:
     python demos/evaluation/evaluation_demo.py
 """
 
+import os
 import functools
 import gradio as gr
 from openai import OpenAI
@@ -30,24 +31,42 @@ from judge import judge_answer, JUDGE_SYSTEM_PROMPT
 
 # --- Configuration ---
 
-# Ollama exposes an OpenAI-compatible API at localhost:11434/v1
-OLLAMA_BASE_URL = "http://localhost:11434/v1"
-OLLAMA_MODEL = "qwen2.5:3b"
+# Choose the inference server backend ('ollama' or 'openai')
+INFERENCE_BACKEND = 'openai'
+
+if INFERENCE_BACKEND == 'ollama':
+
+    # Ollama exposes an OpenAI-compatible API at localhost:11434/v1
+    BASE_URL = "http://localhost:11434/v1"
+    MODEL = "qwen2.5:3b"
+    KEY = "ollama",  # Ollama does not check the key; any non-empty string works
+
+elif INFERENCE_BACKEND == 'openai':
+
+    # Get server URL from environment, default to localhost
+    BASE_URL = os.environ.get('OPENAI_API_URL', 'localhost:8502')
+    KEY = os.environ.get('OPENAI_API_KEY', 'dummy')
+    MODEL = os.environ.get('OPENAI_API_MODEL', 'default')
+
+else:
+
+    raise Exception(f"INFERENCE_BACKEND must be set to 'ollama' or 'openai', got {INFERENCE_BACKEND}.")
+
 
 # --- Ollama client (via OpenAI-compatible endpoint) ---
 
 client = OpenAI(
-    base_url=OLLAMA_BASE_URL,
-    api_key="ollama",  # Ollama does not check the key; any non-empty string works
+    base_url=BASE_URL,
+    api_key=KEY,
     timeout=120.0,
 )
 
 # Bind client and model into the functions so Gradio only sees the UI inputs
-_run_benchmark = functools.partial(run_benchmark, client, OLLAMA_MODEL)
-_judge_answer = functools.partial(judge_answer, client, OLLAMA_MODEL)
+_run_benchmark = functools.partial(run_benchmark, client, MODEL)
+_judge_answer = functools.partial(judge_answer, client, MODEL)
 
-BENCH_MODEL = OLLAMA_MODEL
-JUDGE_MODEL = OLLAMA_MODEL
+BENCH_MODEL = MODEL
+JUDGE_MODEL = MODEL
 
 
 # --- Build Gradio UI ---
